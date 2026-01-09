@@ -1,4 +1,6 @@
+import type { ReactNode } from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useCategories } from '@/hooks/useCategories';
 import { fetchCategories } from '@/services/fakeStore';
 
@@ -8,6 +10,24 @@ jest.mock('@/services/fakeStore', () => ({
 
 const mockedFetchCategories = fetchCategories as jest.MockedFunction<typeof fetchCategories>;
 
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  const Wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+
+  Wrapper.displayName = 'QueryWrapper';
+
+  return Wrapper;
+};
+
 describe('useCategories', () => {
   beforeEach(() => {
     mockedFetchCategories.mockReset();
@@ -16,7 +36,7 @@ describe('useCategories', () => {
   it('carrega categorias e finaliza loading', async () => {
     mockedFetchCategories.mockResolvedValue(['electronics', 'jewelery']);
 
-    const { result } = renderHook(() => useCategories());
+    const { result } = renderHook(() => useCategories(), { wrapper: createWrapper() });
 
     expect(result.current.loading).toBe(true);
 
@@ -32,7 +52,7 @@ describe('useCategories', () => {
   it('define empty quando nao ha categorias', async () => {
     mockedFetchCategories.mockResolvedValue([]);
 
-    const { result } = renderHook(() => useCategories());
+    const { result } = renderHook(() => useCategories(), { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -45,7 +65,7 @@ describe('useCategories', () => {
   it('retorna erro quando a requisicao falha', async () => {
     mockedFetchCategories.mockRejectedValue(new Error('Falha na API'));
 
-    const { result } = renderHook(() => useCategories());
+    const { result } = renderHook(() => useCategories(), { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);

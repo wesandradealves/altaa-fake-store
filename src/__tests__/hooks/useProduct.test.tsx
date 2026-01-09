@@ -1,4 +1,6 @@
+import type { ReactNode } from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useProduct } from '@/hooks/useProduct';
 import { fetchProductById } from '@/services/fakeStore';
 
@@ -8,13 +10,31 @@ jest.mock('@/services/fakeStore', () => ({
 
 const mockedFetchProduct = fetchProductById as jest.MockedFunction<typeof fetchProductById>;
 
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  const Wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+
+  Wrapper.displayName = 'QueryWrapper';
+
+  return Wrapper;
+};
+
 describe('useProduct', () => {
   beforeEach(() => {
     mockedFetchProduct.mockReset();
   });
 
   it('nao busca quando id nao existe', async () => {
-    const { result } = renderHook(() => useProduct(undefined));
+    const { result } = renderHook(() => useProduct(undefined), { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -36,7 +56,7 @@ describe('useProduct', () => {
       rating: { rate: 4, count: 2 },
     });
 
-    const { result } = renderHook(() => useProduct('10'));
+    const { result } = renderHook(() => useProduct('10'), { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -50,7 +70,7 @@ describe('useProduct', () => {
   it('retorna erro quando a requisicao falha', async () => {
     mockedFetchProduct.mockRejectedValue(new Error('Falha no produto'));
 
-    const { result } = renderHook(() => useProduct(3));
+    const { result } = renderHook(() => useProduct(3), { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);

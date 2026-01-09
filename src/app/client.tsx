@@ -1,7 +1,10 @@
 'use client';
 
 import { ThemeProvider } from 'styled-components';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { AnimatePresence, motion, useScroll } from 'motion/react';
 import { LoaderProvider, useLoader } from '@/context/spinner';
 import { AppProvider } from '@/context/app';
@@ -25,6 +28,26 @@ export default function ClientProviders({ children }: { children: React.ReactNod
   const { scrollY } = useScroll({
     container: scrollRef,
   });
+  const persister = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+    return createSyncStoragePersister({
+      storage: window.localStorage,
+      key: 'bdm-web3:react-query',
+    });
+  }, []);
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 5 * 60 * 1000,
+            gcTime: 60 * 60 * 1000,
+            retry: 1,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
   const [scrollPosition, setScrollPosition] = useState<number>(0);
 
   useEffect(() => {
@@ -36,7 +59,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
     };
   }, [scrollY]);
 
-  return (
+  const contentTree = (
     <ThemeProvider theme={theme}>
       <LoaderProvider>
         <LoaderSetup />
@@ -71,6 +94,25 @@ export default function ClientProviders({ children }: { children: React.ReactNod
       </LoaderProvider>
       <GlobalStyle />
     </ThemeProvider>
+  );
+
+  if (!persister) {
+    return <QueryClientProvider client={queryClient}>{contentTree}</QueryClientProvider>;
+  }
+
+  return (
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister,
+        maxAge: 24 * 60 * 60 * 1000,
+        dehydrateOptions: {
+          shouldDehydrateQuery: (query) => query.state.status === 'success',
+        },
+      }}
+    >
+      {contentTree}
+    </PersistQueryClientProvider>
   );
 }
 
