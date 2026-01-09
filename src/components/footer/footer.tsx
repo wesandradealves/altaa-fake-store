@@ -10,7 +10,11 @@ const Footer = () => {
     <footer className="mt-auto border-t border-white/10 text-sm text-gray-400">
       <div className="container m-auto flex flex-wrap items-center justify-between gap-2 py-6">
         <span>{appName}</span>
-        <span>{content.app.footer.tagline}</span>
+        <span
+          dangerouslySetInnerHTML={{
+            __html: content.app.footer.tagline,
+          }}
+        />
       </div>
     </footer>
   );

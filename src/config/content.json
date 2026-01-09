@@ -11,7 +11,7 @@
       "error": "Categorias indisponiveis"
     },
     "footer": {
-      "tagline": "Desenvolvido por <b>Wesley Alves</b>"
+      "tagline": "Desenvolvido por <a href='http://www.github.com/wesandradealves'><i class='fa-brands fa-github'></i> <b>Wesley Alves</b></a>"
     }
   },
   "common": {
