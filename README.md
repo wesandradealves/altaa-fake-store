@@ -12,6 +12,7 @@ Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto se
 - **HTTP Client:** Axios
 - **Cache:** React Query
 - **PWA:** Service Worker + Workbox (@ducanh2912/next-pwa)
+- **Storybook:** Storybook 8 (documentacao e testes visuais)
 - **Testes:** Jest + Testing Library + Playwright
 - **Qualidade:** ESLint (Next)
 
@@ -29,6 +30,7 @@ Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto se
 - PWA com cache offline (app shell, imagens e API)
 - Estados de loading, erro e vazio
 - SEO basico via hook de metadata
+- Storybook para visualizar estados dos componentes com mocks de dados
 
 ## Requisitos
 
@@ -43,6 +45,14 @@ npm run dev
 ```
 
 Acesse `http://localhost:3000`.
+
+Para abrir o Storybook:
+
+```bash
+npm run storybook
+```
+
+Storybook em `http://localhost:6006`.
 
 ## Variaveis de ambiente
 
@@ -64,7 +74,7 @@ src/
     molecules/
     organisms/
     templates/
-  context/                 # Context API (app, spinner)
+  context/                 # Context API (app, spinner, accessibility)
   hooks/                   # Hooks customizados (dados e metadata)
   services/                # Axios + servicos Fake Store
   config/                  # Textos (pt-BR)
@@ -75,6 +85,7 @@ src/
 - **Registry:** uso do Styled Components registry para evitar flash de estilos no SSR.
 - **Services/Hooks:** separacao clara entre UI, logica e integracao API.
 - **Texts:** centralizados em `src/config/content.json` (pt-BR).
+- **Storybook:** stories para atoms/molecules/organisms/templates e mocks de hooks.
 
 ## Escolha do framework
 
@@ -95,6 +106,7 @@ Escolhi **Next.js** para manter a arquitetura do boilerplate (App Router + layou
 - Testes unitarios com Jest + Testing Library (hooks, services, componentes e templates).
 - E2E com Playwright para filtros, ordenacao, paginacao e PWA offline.
 - Lighthouse (performance, acessibilidade, boas praticas e SEO) via script dedicado e CI.
+- Storybook para testes visuais e revisao de estados dos componentes.
 - Husky executa `lint` e `test:unit` em pre-commit e pre-push.
 - Deploy (`vercel-build`) roda lint + testes antes do build.
 
