@@ -14,11 +14,34 @@ jest.mock('@/services/api', () => ({
 }));
 
 const mockedApi = api as { get: jest.Mock };
+const navigatorDescriptor = Object.getOwnPropertyDescriptor(window.navigator, 'onLine');
 
 describe('fakeStore services', () => {
   beforeEach(() => {
     mockedApi.get.mockReset();
+    localStorage.clear();
+    Object.defineProperty(window.navigator, 'onLine', {
+      configurable: true,
+      get: () => true,
+    });
   });
+
+  afterAll(() => {
+    if (navigatorDescriptor) {
+      Object.defineProperty(window.navigator, 'onLine', navigatorDescriptor);
+    }
+  });
+
+  const setOnlineStatus = (value: boolean) => {
+    Object.defineProperty(window.navigator, 'onLine', {
+      configurable: true,
+      get: () => value,
+    });
+  };
+
+  const setCache = <T>(key: string, data: T, timestamp = Date.now()) => {
+    localStorage.setItem(`fakestore:${key}`, JSON.stringify({ data, timestamp }));
+  };
 
   it('normaliza lista de produtos', async () => {
     mockedApi.get.mockResolvedValue({
@@ -82,5 +105,64 @@ describe('fakeStore services', () => {
     await fetchProductsByCategory("men's clothing");
 
     expect(mockedApi.get).toHaveBeenCalledWith("/products/category/men's%20clothing");
+  });
+
+  it('retorna cache quando offline para produtos', async () => {
+    setOnlineStatus(false);
+    const cachedProducts = [
+      {
+        id: 1,
+        title: 'Produto Cache',
+        price: 12.5,
+        description: 'Descricao',
+        category: 'categoria',
+        image: 'img',
+        rating: { rate: 4.2, count: 10 },
+      },
+    ];
+    setCache('products', cachedProducts);
+
+    const products = await fetchProducts();
+
+    expect(mockedApi.get).not.toHaveBeenCalled();
+    expect(products).toEqual(cachedProducts);
+  });
+
+  it('retorna cache quando a API falha', async () => {
+    setOnlineStatus(true);
+    const cachedCategories = ['electronics'];
+    setCache('categories', cachedCategories);
+
+    mockedApi.get.mockRejectedValue(new Error('Falha'));
+
+    const categories = await fetchCategories();
+
+    expect(categories).toEqual(cachedCategories);
+  });
+
+  it('salva cache ao buscar produto', async () => {
+    mockedApi.get.mockResolvedValue({
+      data: {
+        id: 9,
+        title: 'Produto 9',
+        price: 99.9,
+        description: 'Descricao',
+        category: 'categoria',
+        image: 'img',
+        rating: { rate: 4.1, count: 2 },
+      },
+    });
+
+    await fetchProductById(9);
+
+    const cached = localStorage.getItem('fakestore:product:9');
+    expect(cached).not.toBeNull();
+  });
+
+  it('propaga erro quando offline e sem cache', async () => {
+    setOnlineStatus(false);
+    mockedApi.get.mockRejectedValue(new Error('Sem cache'));
+
+    await expect(fetchCategories()).rejects.toThrow('Sem cache');
   });
 });

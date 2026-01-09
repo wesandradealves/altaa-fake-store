@@ -10,16 +10,23 @@ Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto se
 - **UI:** Material UI (Selects)
 - **Animacoes:** motion/react
 - **HTTP Client:** Axios
+- **PWA:** Service Worker + Workbox (@ducanh2912/next-pwa)
+- **Testes:** Jest + Testing Library + Playwright
+- **Qualidade:** ESLint (Next)
 
 ## Funcionalidades
 
 - Listagem de produtos com filtros por categoria e ordenacao (preco/nome)
+- Paginacao na listagem (8 por pagina)
 - Detalhe do produto com rating e superzoom de imagem
 - Produtos relacionados na mesma categoria com paginacao (4 por pagina)
-- Paginacao na listagem (8 por pagina)
+- Menu de categorias dinamico (rota `/categoria/[...slug]`) com foco em acessibilidade
+- Links de categoria nos cards e no detalhe
+- Thumbnails com lazyload
+- Cache client-side para dados da API com fallback offline
+- PWA com cache offline (app shell, imagens e API)
 - Estados de loading, erro e vazio
 - SEO basico via hook de metadata
-- Menu de categorias dinamico (rota `/categoria/[...slug]`)
 
 ## Requisitos
 
@@ -48,6 +55,7 @@ NEXT_PUBLIC_APP_NAME=Projeto Base
 
 ```
 src/
+  __tests__/              # Testes unitarios
   app/                     # Rotas App Router (layout, pages, templates)
   components/
     atoms/
@@ -73,22 +81,35 @@ Escolhi **Next.js** para manter a arquitetura do boilerplate (App Router + layou
 ## Decisoes tecnicas
 
 - Paginacao client-side porque a Fake Store API nao oferece paginacao nativa.
+- Interceptors do Axios para controle de loading e token.
+- Cache local no client com fallback em caso de falha/offline.
+- Service Worker com runtime caching para API, assets e imagens.
 - `motion/react` para transicoes leves e declarativas.
-- `useMetadata` para controlar titulo, description e OG sem duplicar metadata no layout.
+- `useMetadata` para controlar title, description e OG sem duplicar metadata no layout.
 - `memo`, `useCallback` e `useMemo` aplicados para evitar renders desnecessarios.
+
+## Qualidade e automacao
+
+- Testes unitarios com Jest + Testing Library (hooks, services, componentes e templates).
+- E2E com Playwright para manifest, offline e cache.
+- Lighthouse PWA via script dedicado (gera relatorio).
+- Husky executa `lint` e `test:unit` em pre-commit e pre-push.
+- Deploy (`vercel-build`) roda lint + testes antes do build.
+
+Para rodar E2E localmente: `npx playwright install`.
+O relatorio do Lighthouse fica em `.lighthouse/pwa.html`.
 
 ## Trade-offs
 
-- Sem cache persistente (apenas estado em memoria).
+- Sem cache persistente compartilhado (apenas no client).
 - Paginacao client-side pode carregar mais dados do que o necessario.
-- Sem testes automatizados neste momento.
+- Testes e2e focam em PWA/offline; outros fluxos ainda nao sao cobertos.
 
 ## Melhorias futuras
 
-- Testes unitarios para hooks e componentes criticos.
 - Cache ou SWR/React Query para dados remotos.
-- Skeletons e transicoes mais refinadas no detalhe.
 - Acessibilidade extra (focus trap no menu, atalhos de teclado).
+- Paginacao server-side caso a API suporte.
 
 ## Scripts
 
@@ -97,4 +118,12 @@ npm run dev
 npm run build
 npm run start
 npm run lint
+npm run test
+npm run test:unit
+npm run test:e2e
+npm run test:pwa
+npm run test:ci
+npm run vercel-build
+npm run storybook
+npm run build-storybook
 ```
