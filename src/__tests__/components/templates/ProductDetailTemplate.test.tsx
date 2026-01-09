@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import ProductDetailTemplate from '@/components/templates/ProductDetailTemplate';
 import { useProduct } from '@/hooks/useProduct';
 import { useMetadata } from '@/hooks/useMetadata';
+import type { Product } from '@/types/product';
 import content from '@/config/content.json';
 
 jest.mock('@/hooks/useProduct', () => ({
@@ -20,12 +21,20 @@ jest.mock('@/components/molecules/ProductDetailSkeleton', () => ({
 
 jest.mock('@/components/organisms/ProductDetail', () => ({
   __esModule: true,
-  default: ({ product }: any) => <div data-testid="product-detail">{product.title}</div>,
+  default: ({ product }: { product: Product }) => (
+    <div data-testid="product-detail">{product.title}</div>
+  ),
 }));
 
 jest.mock('@/components/organisms/RelatedProducts', () => ({
   __esModule: true,
-  default: ({ category, currentProductId }: any) => (
+  default: ({
+    category,
+    currentProductId,
+  }: {
+    category: string;
+    currentProductId: number;
+  }) => (
     <div data-testid="related-products" data-category={category} data-id={currentProductId} />
   ),
 }));
@@ -88,14 +97,18 @@ describe('ProductDetailTemplate', () => {
   });
 
   it('renderiza detalhes e produtos relacionados', () => {
-    const product = {
+    const product: Product = {
       id: 2,
       title: 'Produto Exemplo',
+      price: 199.9,
+      description: 'Descricao do produto',
       category: 'electronics',
+      image: 'https://example.com/image.png',
+      rating: { rate: 4.4, count: 18 },
     };
 
     mockedUseProduct.mockReturnValue({
-      product: product as any,
+      product,
       loading: false,
       error: null,
       refresh: jest.fn(),

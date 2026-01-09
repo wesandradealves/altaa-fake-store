@@ -4,7 +4,25 @@ import ProductsTemplate from '@/components/templates/ProductsTemplate';
 import { useProducts } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
 import { useMetadata } from '@/hooks/useMetadata';
+import type { Product } from '@/types/product';
 import content from '@/config/content.json';
+
+type FilterBarProps = {
+  category: string;
+  sort: string;
+  onCategoryChange: (value: string) => void;
+  onSortChange: (value: string) => void;
+};
+
+type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+};
+
+type ProductGridProps = {
+  products: Product[];
+};
 
 jest.mock('@/hooks/useProducts', () => ({
   useProducts: jest.fn(),
@@ -20,7 +38,7 @@ jest.mock('@/hooks/useMetadata', () => ({
 
 jest.mock('@/components/molecules/FilterBar', () => ({
   __esModule: true,
-  default: ({ category, sort, onCategoryChange, onSortChange }: any) => (
+  default: ({ category, sort, onCategoryChange, onSortChange }: FilterBarProps) => (
     <div data-testid="filter-bar" data-category={category} data-sort={sort}>
       <button type="button" onClick={() => onCategoryChange('electronics')}>
         Trocar categoria
@@ -34,7 +52,7 @@ jest.mock('@/components/molecules/FilterBar', () => ({
 
 jest.mock('@/components/molecules/Pagination', () => ({
   __esModule: true,
-  default: ({ currentPage, totalPages, onPageChange }: any) => (
+  default: ({ currentPage, totalPages, onPageChange }: PaginationProps) => (
     <div data-testid="pagination" data-page={currentPage} data-total={totalPages}>
       <button type="button" onClick={() => onPageChange(2)}>
         Pagina 2
@@ -45,9 +63,9 @@ jest.mock('@/components/molecules/Pagination', () => ({
 
 jest.mock('@/components/organisms/ProductGrid', () => ({
   __esModule: true,
-  default: ({ products }: any) => (
+  default: ({ products }: ProductGridProps) => (
     <div data-testid="product-grid">
-      {products.map((product: any) => (
+      {products.map((product) => (
         <span key={product.id}>{product.title}</span>
       ))}
     </div>
@@ -64,6 +82,17 @@ const mockedUseCategories = useCategories as jest.MockedFunction<typeof useCateg
 const mockedUseMetadata = useMetadata as jest.MockedFunction<typeof useMetadata>;
 
 describe('ProductsTemplate', () => {
+  const makeProduct = (overrides: Partial<Product>): Product => ({
+    id: 0,
+    title: 'Produto',
+    price: 0,
+    description: 'Descricao',
+    category: 'categoria',
+    image: 'https://example.com/image.png',
+    rating: { rate: 0, count: 0 },
+    ...overrides,
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockedUseCategories.mockReturnValue({
@@ -125,16 +154,16 @@ describe('ProductsTemplate', () => {
 
     mockedUseProducts.mockReturnValue({
       products: [
-        { id: 1, title: 'Produto A', price: 10 },
-        { id: 2, title: 'Produto B', price: 20 },
-        { id: 3, title: 'Produto C', price: 30 },
-        { id: 4, title: 'Produto D', price: 40 },
-        { id: 5, title: 'Produto E', price: 50 },
-        { id: 6, title: 'Produto F', price: 60 },
-        { id: 7, title: 'Produto G', price: 70 },
-        { id: 8, title: 'Produto H', price: 80 },
-        { id: 9, title: 'Produto I', price: 90 },
-        { id: 10, title: 'Produto J', price: 100 },
+        makeProduct({ id: 1, title: 'Produto A', price: 10 }),
+        makeProduct({ id: 2, title: 'Produto B', price: 20 }),
+        makeProduct({ id: 3, title: 'Produto C', price: 30 }),
+        makeProduct({ id: 4, title: 'Produto D', price: 40 }),
+        makeProduct({ id: 5, title: 'Produto E', price: 50 }),
+        makeProduct({ id: 6, title: 'Produto F', price: 60 }),
+        makeProduct({ id: 7, title: 'Produto G', price: 70 }),
+        makeProduct({ id: 8, title: 'Produto H', price: 80 }),
+        makeProduct({ id: 9, title: 'Produto I', price: 90 }),
+        makeProduct({ id: 10, title: 'Produto J', price: 100 }),
       ],
       loading: false,
       error: null,

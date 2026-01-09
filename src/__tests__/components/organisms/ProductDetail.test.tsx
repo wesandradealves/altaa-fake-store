@@ -1,10 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import ProductDetail from '@/components/organisms/ProductDetail';
+import type { Product } from '@/types/product';
 import { encodeCategorySlug } from '@/utils';
 
 describe('ProductDetail', () => {
   it('exibe informacoes do produto e links relacionados', () => {
-    const product = {
+    const product: Product = {
       id: 1,
       title: 'Produto Teste',
       price: 109.95,
@@ -22,7 +23,7 @@ describe('ProductDetail', () => {
       ratingCount: 'Avaliacoes',
     };
 
-    render(<ProductDetail product={product as any} labels={labels} backLabel="Voltar" />);
+    render(<ProductDetail product={product} labels={labels} backLabel="Voltar" />);
 
     expect(screen.getByRole('heading', { name: 'Produto Teste' })).toBeInTheDocument();
     expect(screen.getByText(labels.description)).toBeInTheDocument();
