@@ -111,9 +111,9 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
   );
 
   return (
-    <section className="container m-auto py-16 text-white">
-      <div className="flex flex-wrap items-end justify-between gap-6">
-        <div className="space-y-2">
+    <section className="container m-auto max-w-6xl py-12 text-white sm:py-16">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-2xl space-y-2">
           <p className="text-xs uppercase tracking-[0.3em] text-gray-400">{content.products.brand}</p>
           <h1 className="text-3xl font-semibold lg:text-5xl">
             {isCategoryPage
@@ -126,7 +126,7 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
               : content.products.subtitle}
           </p>
         </div>
-        <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-gray-300">
+        <div className="self-start rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-gray-300 lg:self-end">
           {loading
             ? content.common.loading
             : `${sortedProducts.length} ${content.common.itemsLabel}`}
@@ -152,7 +152,7 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
         />
 
         {loading ? (
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">{skeletons}</div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">{skeletons}</div>
         ) : error ? (
           <StateMessage
             title={content.products.states.errorTitle}

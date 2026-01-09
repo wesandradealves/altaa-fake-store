@@ -1,6 +1,7 @@
 {
   "app": {
     "nameFallback": "Projeto Base",
+    "logoAlt": "Logo Altaa",
     "nav": {
       "home": "Inicio",
       "categories": "Categorias"

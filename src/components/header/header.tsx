@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import classNames from 'classnames';
-import { useApp } from '@/context/app';
+import Logo from '@/components/atoms/Logo';
 import CategoriesMenu from '@/components/molecules/CategoriesMenu';
 import content from '@/config/content.json';
 
@@ -11,8 +11,6 @@ interface Props {
 }
 
 const Header = ({ scrollPosition = 0 }: Props) => {
-  const { appName } = useApp();
-
   return (
     <header
       className={classNames(
@@ -21,8 +19,8 @@ const Header = ({ scrollPosition = 0 }: Props) => {
       )}
     >
       <div className="container m-auto flex items-center justify-between py-4">
-        <Link href="/" className="text-lg font-semibold text-white">
-          {appName}
+        <Link href="/" className="flex items-center">
+          <Logo className="h-9 w-auto sm:h-10" priority />
         </Link>
         <nav className="flex items-center gap-4 text-sm text-gray-200">
           <Link href="/" className="hover:text-white">

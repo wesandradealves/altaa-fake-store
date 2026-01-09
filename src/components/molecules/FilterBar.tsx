@@ -47,7 +47,6 @@ const FilterBar = ({
 
   const controlSx = useMemo(
     () => ({
-      minWidth: 200,
       '& .MuiOutlinedInput-root': {
         backgroundColor: 'rgba(255, 255, 255, 0.06)',
         color: '#E5E7EB',
@@ -110,8 +109,13 @@ const FilterBar = ({
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-white">
-      <FormControl size="small" className="min-w-[200px]" disabled={loading} sx={controlSx}>
+    <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-white backdrop-blur sm:flex-row sm:items-center">
+      <FormControl
+        size="small"
+        className="w-full sm:min-w-[220px] sm:w-auto"
+        disabled={loading}
+        sx={controlSx}
+      >
         <InputLabel id="category-filter-label">{labels.category}</InputLabel>
         <Select
           labelId="category-filter-label"
@@ -134,7 +138,7 @@ const FilterBar = ({
         </Select>
       </FormControl>
 
-      <FormControl size="small" className="min-w-[200px]" sx={controlSx}>
+      <FormControl size="small" className="w-full sm:min-w-[220px] sm:w-auto" sx={controlSx}>
         <InputLabel id="sort-filter-label">{labels.sort}</InputLabel>
         <Select
           labelId="sort-filter-label"

@@ -18,7 +18,7 @@ const ProductGrid = ({ products, priceLabel }: Props) => {
     [priceLabel, products]
   );
 
-  return <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">{cards}</div>;
+  return <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">{cards}</div>;
 };
 
 export default memo(ProductGrid);

@@ -28,7 +28,7 @@ const ProductCard = ({ product, priceLabel }: Props) => {
       transition={{ duration: 0.25 }}
       className="h-full"
     >
-      <div className="relative flex h-full flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-white transition hover:border-white/30">
+      <div className="group relative flex h-full flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-white transition hover:border-white/30 hover:bg-white/10 focus-within:border-white/40 focus-within:ring-2 focus-within:ring-white/20">
         <Link href={href} className="absolute inset-0 z-0" aria-label={title}>
           <span className="sr-only">{title}</span>
         </Link>
@@ -40,10 +40,10 @@ const ProductCard = ({ product, priceLabel }: Props) => {
               alt={title}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-              className="object-contain p-6"
+              className="object-contain p-6 transition-transform duration-300 ease-out group-hover:scale-105"
             />
           </div>
-          <h3 className="text-base font-semibold leading-snug">{title}</h3>
+          <h3 className="text-base font-semibold leading-snug text-white/90">{title}</h3>
         </div>
 
         <Link href={categoryHref} className="relative z-20 inline-flex">
