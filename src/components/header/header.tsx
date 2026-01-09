@@ -4,6 +4,7 @@ import Link from 'next/link';
 import classNames from 'classnames';
 import Logo from '@/components/atoms/Logo';
 import CategoriesMenu from '@/components/molecules/CategoriesMenu';
+import AccessibilityControls from '@/components/molecules/AccessibilityControls';
 import content from '@/config/content.json';
 
 interface Props {
@@ -27,6 +28,7 @@ const Header = ({ scrollPosition = 0 }: Props) => {
             {content.app.nav.home}
           </Link>
           <CategoriesMenu />
+          <AccessibilityControls />
         </nav>
       </div>
     </header>

@@ -23,6 +23,7 @@ Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto se
 - Menu de categorias dinamico (rota `/categoria/[...slug]`) com foco em acessibilidade
 - Links de categoria nos cards e no detalhe
 - Thumbnails com lazyload
+- Controle de acessibilidade (alto contraste e ajuste de fonte)
 - Cache client-side para dados da API com fallback offline
 - PWA com cache offline (app shell, imagens e API)
 - Estados de loading, erro e vazio

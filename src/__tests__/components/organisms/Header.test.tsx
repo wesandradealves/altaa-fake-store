@@ -7,6 +7,11 @@ jest.mock('@/components/molecules/CategoriesMenu', () => ({
   default: () => <div data-testid="categories-menu" />,
 }));
 
+jest.mock('@/components/molecules/AccessibilityControls', () => ({
+  __esModule: true,
+  default: () => <div data-testid="accessibility-controls" />,
+}));
+
 describe('Header', () => {
   it('renderiza o header padrao com link inicial', () => {
     render(<Header />);

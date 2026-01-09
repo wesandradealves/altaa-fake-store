@@ -10,6 +10,10 @@ export const GlobalStyle = createGlobalStyle `
         box-sizing: border-box;
     }
 
+    :root {
+        --font-scale: 1;
+    }
+
     html,
     body,
     div,
@@ -78,11 +82,29 @@ export const GlobalStyle = createGlobalStyle `
         font-optical-sizing: auto;
         font-style: normal;
         overflow-x: hidden;
-        font-size: ${pxToRem(16)};
+        font-size: calc(${pxToRem(16)} * var(--font-scale, 1));
         background: ${props => props.theme._colors.primary.background};
         * { 
             transition: 30ms ease-in-out all;
         }
+    }
+
+    html[data-contrast='high'] body {
+        background: #000000;
+        color: #ffffff;
+    }
+
+    html[data-contrast='high'] #primary {
+        filter: contrast(1.2) saturate(1.1);
+    }
+
+    html[data-contrast='high'] a {
+        text-decoration: underline;
+    }
+
+    html[data-contrast='high'] *:focus-visible {
+        outline: 2px solid #ffffff;
+        outline-offset: 2px;
     }
 
     blockquote,
