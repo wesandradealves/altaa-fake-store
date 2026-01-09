@@ -13,14 +13,13 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
 import { useCategories } from '@/hooks/useCategories';
-import { useHydrated } from '@/hooks/useHydrated';
 import { encodeCategorySlug } from '@/utils';
 import content from '@/config/content.json';
 import CategoriesMenuSkeleton from '@/components/molecules/CategoriesMenuSkeleton';
 
 const CategoriesMenu = () => {
   const { categories, loading, error, isEmpty } = useCategories();
-  const hydrated = useHydrated();
+  const [hydrated, setHydrated] = useState(false);
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -163,6 +162,10 @@ const CategoriesMenu = () => {
   );
 
   useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
     const handleShortcut = (event: globalThis.KeyboardEvent) => {
       if (!event.altKey || event.key.toLowerCase() !== 'c') return;
       const target = event.target as HTMLElement | null;
@@ -190,11 +193,11 @@ const CategoriesMenu = () => {
     return '';
   }, [error, isEmpty]);
 
-  const showSkeleton = loading;
-
   if (!hydrated) {
     return <CategoriesMenuSkeleton />;
   }
+
+  const showSkeleton = loading;
 
   return (
     <div

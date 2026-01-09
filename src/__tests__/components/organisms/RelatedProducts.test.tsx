@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import RelatedProducts from '@/components/organisms/RelatedProducts';
 import { useProducts } from '@/hooks/useProducts';
@@ -55,7 +55,9 @@ describe('RelatedProducts', () => {
 
     render(<RelatedProducts category="electronics" currentProductId={1} />);
 
-    expect(screen.getByText(content.productDetail.related.states.errorTitle)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(content.productDetail.related.states.errorTitle)).toBeInTheDocument();
+    });
 
     await user.click(screen.getByRole('button', { name: content.productDetail.related.states.retry }));
     expect(refresh).toHaveBeenCalledTimes(1);
@@ -81,7 +83,7 @@ describe('RelatedProducts', () => {
 
     render(<RelatedProducts category="electronics" currentProductId={1} />);
 
-    const grid = screen.getByTestId('product-grid');
+    const grid = await screen.findByTestId('product-grid');
     expect(grid).toHaveTextContent('Produto 2');
     expect(grid).toHaveTextContent('Produto 5');
     expect(grid).not.toHaveTextContent('Produto 1');

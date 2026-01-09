@@ -2,7 +2,7 @@
 
 import { ThemeProvider } from 'styled-components';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { AnimatePresence, motion, useScroll } from 'motion/react';
@@ -23,6 +23,21 @@ const theme = {
   _breakpoints,
 };
 
+const createMemoryStorage = () => {
+  const store = new Map<string, string>();
+  return {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      store.set(key, value);
+    },
+    removeItem: (key: string) => {
+      store.delete(key);
+    },
+  };
+};
+
+const memoryStorage = createMemoryStorage();
+
 let interceptorsInitialized = false;
 
 export default function ClientProviders({ children }: { children: React.ReactNode }) {
@@ -30,14 +45,13 @@ export default function ClientProviders({ children }: { children: React.ReactNod
   const { scrollY } = useScroll({
     container: scrollRef,
   });
-  const [isHydrated, setIsHydrated] = useState(false);
   const persister = useMemo(() => {
-    if (!isHydrated || typeof window === 'undefined') return null;
+    const storage = typeof window === 'undefined' ? memoryStorage : window.localStorage;
     return createSyncStoragePersister({
-      storage: window.localStorage,
+      storage,
       key: 'bdm-web3:react-query',
     });
-  }, [isHydrated]);
+  }, []);
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -52,10 +66,6 @@ export default function ClientProviders({ children }: { children: React.ReactNod
       })
   );
   const [scrollPosition, setScrollPosition] = useState<number>(0);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
 
   useEffect(() => {
     const unsubscribe = scrollY.onChange((n) => {
@@ -102,10 +112,6 @@ export default function ClientProviders({ children }: { children: React.ReactNod
       <GlobalStyle />
     </ThemeProvider>
   );
-
-  if (!persister) {
-    return <QueryClientProvider client={queryClient}>{contentTree}</QueryClientProvider>;
-  }
 
   return (
     <PersistQueryClientProvider

@@ -84,9 +84,14 @@ export const GlobalStyle = createGlobalStyle `
         overflow-x: hidden;
         font-size: calc(${pxToRem(16)} * var(--font-scale, 1));
         background: ${props => props.theme._colors.primary.background};
-        * { 
-            transition: 30ms ease-in-out all;
-        }
+    }
+
+    a,
+    button,
+    input,
+    select,
+    textarea {
+        transition: 120ms ease-in-out;
     }
 
     html[data-contrast='high'] body {

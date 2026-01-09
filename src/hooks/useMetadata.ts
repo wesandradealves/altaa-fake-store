@@ -23,11 +23,14 @@ export function useMetadata({
       content: string | undefined,
       attribute: 'name' | 'property'
     ) => {
-      if (!content) return;
       const fallbackAttribute = attribute === 'name' ? 'property' : 'name';
       let meta = document.querySelector(`meta[${attribute}="${key}"]`);
       if (!meta) {
         meta = document.querySelector(`meta[${fallbackAttribute}="${key}"]`);
+      }
+      if (!content) {
+        meta?.remove();
+        return;
       }
       if (!meta) {
         meta = document.createElement('meta');
