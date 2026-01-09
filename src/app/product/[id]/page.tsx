@@ -1,11 +1,13 @@
 import ProductDetailTemplate from '@/components/templates/ProductDetailTemplate';
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params?: Promise<{
+    id?: string;
+  }>;
 }
 
-export default function ProductPage({ params }: PageProps) {
-  return <ProductDetailTemplate id={params.id} />;
+export default async function ProductPage({ params }: PageProps) {
+  const resolvedParams = (await params) ?? {};
+  const id = resolvedParams.id ?? '';
+  return <ProductDetailTemplate id={id} />;
 }
