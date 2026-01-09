@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
+import content from '@/config/content.json';
 
 interface AppContextProps {
   appName: string;
@@ -9,7 +10,7 @@ const AppContext = createContext<AppContextProps | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [appName, setAppName] = useState<string>(
-    () => process.env.NEXT_PUBLIC_APP_NAME ?? 'Starter App'
+    () => process.env.NEXT_PUBLIC_APP_NAME ?? content.app.nameFallback
   );
 
   const value = useMemo(() => ({ appName, setAppName }), [appName]);

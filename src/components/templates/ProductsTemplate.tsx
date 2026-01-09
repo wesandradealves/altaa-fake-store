@@ -8,48 +8,21 @@ import FilterBar from '@/components/molecules/FilterBar';
 import ProductCardSkeleton from '@/components/molecules/ProductCardSkeleton';
 import StateMessage from '@/components/molecules/StateMessage';
 import ProductGrid from '@/components/organisms/ProductGrid';
+import content from '@/config/content.json';
 
-const copy = {
-  brand: 'Fake Store',
-  title: 'Catalogo de Produtos',
-  subtitle: 'Navegue pelo catalogo, filtre por categoria e ordene por preco ou nome.',
-  itemsLabel: 'itens',
-  meta: {
-    title: 'Catalogo Fake Store',
-    description: 'Lista de produtos usando Fake Store API com filtros e ordenacao.',
-    keywords: 'react, nextjs, fake store, ecommerce',
-    ogTitle: 'Catalogo Fake Store',
-  },
-  filters: {
-    category: 'Categoria',
-    sort: 'Ordenacao',
-    allCategories: 'Todas as categorias',
-    categoriesUnavailable: 'Categorias indisponiveis',
-  },
-  sortOptions: [
-    { value: 'price-asc', label: 'Preco: menor para maior' },
-    { value: 'price-desc', label: 'Preco: maior para menor' },
-    { value: 'name-asc', label: 'Nome: A a Z' },
-    { value: 'name-desc', label: 'Nome: Z a A' },
-  ],
-  states: {
-    errorTitle: 'Nao foi possivel carregar os produtos',
-    errorDescription: 'Tente novamente em alguns instantes.',
-    retry: 'Tentar novamente',
-    emptyTitle: 'Nenhum produto encontrado',
-    emptyDescription: 'Ajuste os filtros ou escolha outra categoria.',
-  },
-  card: {
-    priceLabel: 'Preco',
-  },
-};
+const sortOptions = [
+  { value: 'price-asc', label: content.products.sortOptions.priceAsc },
+  { value: 'price-desc', label: content.products.sortOptions.priceDesc },
+  { value: 'name-asc', label: content.products.sortOptions.nameAsc },
+  { value: 'name-desc', label: content.products.sortOptions.nameDesc },
+];
 
 const ProductsTemplate = () => {
   useMetadata({
-    title: copy.meta.title,
-    description: copy.meta.description,
-    keywords: copy.meta.keywords,
-    ogTitle: copy.meta.ogTitle,
+    title: content.products.meta.title,
+    description: content.products.meta.description,
+    keywords: content.products.meta.keywords,
+    ogTitle: content.products.meta.ogTitle,
     ogImage: '/favicon.ico',
     favicon: '/favicon.ico',
   });
@@ -113,16 +86,16 @@ const ProductsTemplate = () => {
     <section className="container m-auto py-16 text-white">
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.3em] text-gray-400">{copy.brand}</p>
-          <h1 className="text-3xl font-semibold lg:text-5xl">{copy.title}</h1>
+          <p className="text-xs uppercase tracking-[0.3em] text-gray-400">{content.products.brand}</p>
+          <h1 className="text-3xl font-semibold lg:text-5xl">{content.products.title}</h1>
           <p className="text-sm text-gray-300">
-            {copy.subtitle}
+            {content.products.subtitle}
           </p>
         </div>
         <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-gray-300">
           {loading
-            ? 'Carregando...'
-            : `${sortedProducts.length} ${copy.itemsLabel}`}
+            ? content.common.loading
+            : `${sortedProducts.length} ${content.common.itemsLabel}`}
         </div>
       </div>
 
@@ -131,16 +104,16 @@ const ProductsTemplate = () => {
           categories={categoryOptions}
           category={category}
           sort={sort}
-          sortOptions={copy.sortOptions}
+          sortOptions={sortOptions}
           loading={categoriesLoading}
           error={categoriesError}
           onCategoryChange={handleCategoryChange}
           onSortChange={handleSortChange}
           labels={{
-            category: copy.filters.category,
-            sort: copy.filters.sort,
-            allCategories: copy.filters.allCategories,
-            categoriesUnavailable: copy.filters.categoriesUnavailable,
+            category: content.products.filters.category,
+            sort: content.products.filters.sort,
+            allCategories: content.products.filters.allCategories,
+            categoriesUnavailable: content.products.filters.categoriesUnavailable,
           }}
         />
 
@@ -148,18 +121,18 @@ const ProductsTemplate = () => {
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">{skeletons}</div>
         ) : error ? (
           <StateMessage
-            title={copy.states.errorTitle}
-            description={copy.states.errorDescription}
-            actionLabel={copy.states.retry}
+            title={content.products.states.errorTitle}
+            description={content.products.states.errorDescription}
+            actionLabel={content.products.states.retry}
             onAction={handleRetry}
           />
         ) : isEmpty ? (
           <StateMessage
-            title={copy.states.emptyTitle}
-            description={copy.states.emptyDescription}
+            title={content.products.states.emptyTitle}
+            description={content.products.states.emptyDescription}
           />
         ) : (
-          <ProductGrid products={sortedProducts} priceLabel={copy.card.priceLabel} />
+          <ProductGrid products={sortedProducts} priceLabel={content.products.card.priceLabel} />
         )}
       </div>
     </section>

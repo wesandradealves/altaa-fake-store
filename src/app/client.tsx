@@ -12,6 +12,7 @@ import StyledJsxRegistry from './registry';
 import { App, GlobalStyle } from '@/app/style';
 import { setupInterceptors } from '@/services/api';
 import { _colors, _breakpoints } from '@/assets/scss/variables';
+import content from '@/config/content.json';
 
 const theme = {
   _colors,
@@ -39,7 +40,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
       <LoaderProvider>
         <LoaderSetup />
         <AppProvider>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>{content.common.loading}</div>}>
             <StyledJsxRegistry>
               <AnimatePresence
                 mode="wait"

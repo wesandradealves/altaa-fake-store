@@ -1,0 +1,54 @@
+{
+  "app": {
+    "nameFallback": "Projeto Base",
+    "nav": {
+      "home": "Inicio",
+      "secondary": "Secundario"
+    },
+    "footer": {
+      "tagline": "Base com app router + styled-components + motion"
+    }
+  },
+  "common": {
+    "loading": "Carregando...",
+    "itemsLabel": "itens"
+  },
+  "products": {
+    "brand": "Fake Store",
+    "title": "Catalogo de Produtos",
+    "subtitle": "Navegue pelo catalogo, filtre por categoria e ordene por preco ou nome.",
+    "filters": {
+      "category": "Categoria",
+      "sort": "Ordenacao",
+      "allCategories": "Todas as categorias",
+      "categoriesUnavailable": "Categorias indisponiveis"
+    },
+    "sortOptions": {
+      "priceAsc": "Preco: menor para maior",
+      "priceDesc": "Preco: maior para menor",
+      "nameAsc": "Nome: A a Z",
+      "nameDesc": "Nome: Z a A"
+    },
+    "states": {
+      "errorTitle": "Nao foi possivel carregar os produtos",
+      "errorDescription": "Tente novamente em alguns instantes.",
+      "retry": "Tentar novamente",
+      "emptyTitle": "Nenhum produto encontrado",
+      "emptyDescription": "Ajuste os filtros ou escolha outra categoria."
+    },
+    "card": {
+      "priceLabel": "Preco"
+    },
+    "meta": {
+      "title": "Catalogo Fake Store",
+      "description": "Lista de produtos usando Fake Store API com filtros e ordenacao.",
+      "keywords": "react, nextjs, fake store, ecommerce",
+      "ogTitle": "Catalogo Fake Store"
+    }
+  },
+  "secondary": {
+    "title": "Area Secundaria",
+    "description": "Layout e template secundarios para separar contextos.",
+    "loadingTitle": "Carregando area secundaria..."
+  }
+}
