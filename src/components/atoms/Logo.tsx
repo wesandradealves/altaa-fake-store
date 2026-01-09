@@ -21,13 +21,15 @@ const Logo = ({
   sizes,
   alt = content.app.logoAlt,
 }: Props) => {
+  const classes = ['app-logo', className].filter(Boolean).join(' ');
+
   return (
     <Image
       src="/altaa_logo_branca-1024x576.png"
       alt={alt}
       width={width}
       height={height}
-      className={className}
+      className={classes}
       priority={priority}
       sizes={sizes}
     />

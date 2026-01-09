@@ -28,7 +28,7 @@ const ProductCard = ({ product, priceLabel }: Props) => {
       transition={{ duration: 0.25 }}
       className="h-full"
     >
-      <div className="group relative flex h-full flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-white transition hover:border-white/30 hover:bg-white/10 focus-within:border-white/40 focus-within:ring-2 focus-within:ring-white/20">
+      <div className="group relative flex h-full flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-[var(--foreground)] transition hover:border-white/30 hover:bg-white/10 focus-within:border-white/40 focus-within:ring-2 focus-within:ring-white/20">
         <Link href={href} className="absolute inset-0 z-0" aria-label={title}>
           <span className="sr-only">{title}</span>
         </Link>
@@ -44,18 +44,18 @@ const ProductCard = ({ product, priceLabel }: Props) => {
               className="object-contain p-6 transition-transform duration-300 ease-out group-hover:scale-105"
             />
           </div>
-          <h3 className="text-base font-semibold leading-snug text-white/90">{title}</h3>
+          <h3 className="text-base font-semibold leading-snug text-[var(--foreground)] opacity-90">{title}</h3>
         </div>
 
         <Link href={categoryHref} className="relative z-20 inline-flex">
-          <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-gray-200 hover:bg-white/20">
+          <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-[var(--foreground)] hover:bg-white/20">
             {category}
           </Badge>
         </Link>
 
         <div className="relative z-10 pointer-events-none mt-auto flex items-center justify-between">
-          <span className="text-xs text-gray-400">{priceLabel}</span>
-          <Price className="text-lg font-semibold text-white" value={product.price} />
+          <span className="text-xs text-[var(--text-muted)]">{priceLabel}</span>
+          <Price className="text-lg font-semibold text-[var(--foreground)]" value={product.price} />
         </div>
       </div>
     </motion.div>

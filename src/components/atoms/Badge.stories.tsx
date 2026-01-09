@@ -6,7 +6,7 @@ const meta: Meta<typeof Badge> = {
   component: Badge,
   args: {
     children: 'Destaque',
-    className: 'bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-gray-200',
+    className: 'bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-[var(--foreground)]',
   },
 };
 

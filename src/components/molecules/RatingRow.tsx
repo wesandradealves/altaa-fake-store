@@ -19,11 +19,11 @@ const RatingRow = ({ value, count, label, countLabel }: Props) => {
   const formattedValue = useMemo(() => value.toFixed(1), [value]);
 
   return (
-    <div className="flex flex-wrap items-center gap-3 text-sm text-gray-200">
-      <span className="text-xs uppercase tracking-[0.2em] text-gray-400">{label}</span>
+    <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--foreground)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]">{label}</span>
       <Rating value={value} precision={0.1} readOnly size="small" />
-      <span className="text-xs text-gray-300">{formattedValue}</span>
-      <span className="text-xs text-gray-500">
+      <span className="text-xs text-[var(--text-muted)]">{formattedValue}</span>
+      <span className="text-xs text-[var(--text-muted)]">
         ({formattedCount} {countLabel})
       </span>
     </div>

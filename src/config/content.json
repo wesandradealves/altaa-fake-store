@@ -21,6 +21,13 @@
       "increaseFont": "Aumentar fonte",
       "highContrast": "Alto contraste",
       "fontLabel": "Fonte"
+    },
+    "theme": {
+      "label": "Tema",
+      "toggleToLight": "Ativar modo claro",
+      "toggleToDark": "Ativar modo escuro",
+      "light": "Claro",
+      "dark": "Escuro"
     }
   },
   "common": {

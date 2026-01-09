@@ -12,6 +12,22 @@ export const GlobalStyle = createGlobalStyle `
 
     :root {
         --font-scale: 1;
+        color-scheme: ${props => props.theme.mode};
+        --background: ${props => props.theme._colors.primary.background};
+        --foreground: ${props => props.theme._colors.primary.text};
+        --surface: ${props => props.theme._colors.primary.surface};
+        --surface-alt: ${props => props.theme._colors.primary.surfaceAlt};
+        --text-muted: ${props => props.theme._colors.primary.muted};
+        --accent: ${props => props.theme._colors.primary.accent};
+        --border: ${props => props.theme._colors.primary.surfaceAlt};
+        --logo-filter: ${props => (props.theme.mode === 'light' ? 'invert(1)' : 'none')};
+        --theme-toggle-foreground: var(--foreground);
+        --contrast-toggle-foreground: var(--foreground);
+        --select-bg: var(--surface-alt);
+        --select-foreground: var(--foreground);
+        --select-muted: var(--text-muted);
+        --select-border: var(--border);
+        --select-border-hover: var(--accent);
     }
 
     html,
@@ -83,7 +99,12 @@ export const GlobalStyle = createGlobalStyle `
         font-style: normal;
         overflow-x: hidden;
         font-size: calc(${pxToRem(16)} * var(--font-scale, 1));
+        color: ${props => props.theme._colors.primary.text};
         background: ${props => props.theme._colors.primary.background};
+    }
+
+    .app-logo {
+        filter: var(--logo-filter);
     }
 
     a,
@@ -96,7 +117,7 @@ export const GlobalStyle = createGlobalStyle `
 
     html[data-contrast='high'] body {
         background: #000000;
-        color: #ffffff;
+        color: var(--foreground);
     }
 
     html[data-contrast='high'] #primary {
@@ -110,6 +131,19 @@ export const GlobalStyle = createGlobalStyle `
     html[data-contrast='high'] *:focus-visible {
         outline: 2px solid #ffffff;
         outline-offset: 2px;
+    }
+
+    html[data-contrast='high'][data-theme='light'] {
+        --foreground: #ffffff;
+        --text-muted: #ffffff;
+        --border: #ffffff;
+        --logo-filter: none;
+        --theme-toggle-foreground: #000000;
+        --contrast-toggle-foreground: #000000;
+        --select-foreground: #000000;
+        --select-muted: #000000;
+        --select-border: #000000;
+        --select-border-hover: #000000;
     }
 
     blockquote,
