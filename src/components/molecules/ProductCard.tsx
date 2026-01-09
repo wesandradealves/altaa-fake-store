@@ -39,6 +39,7 @@ const ProductCard = ({ product, priceLabel }: Props) => {
               src={product.image}
               alt={title}
               fill
+              loading="lazy"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
               className="object-contain p-6 transition-transform duration-300 ease-out group-hover:scale-105"
             />
