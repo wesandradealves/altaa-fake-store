@@ -2,8 +2,6 @@ import Script from 'next/script';
 import type { Metadata, Viewport } from 'next';
 import classNames from 'classnames';
 import '@/assets/scss/globals.scss';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import ClientProviders from '@/app/client';
 import content from '@/config/content.json';
 
