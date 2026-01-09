@@ -29,6 +29,12 @@
       "allCategories": "Todas as categorias",
       "categoriesUnavailable": "Categorias indisponiveis"
     },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Proxima",
+      "page": "Pagina",
+      "nav": "Paginacao"
+    },
     "category": {
       "titlePrefix": "Categoria",
       "subtitlePrefix": "Produtos da categoria"
@@ -82,6 +88,23 @@
       "keywords": "produto, detalhe, fake store, ecommerce",
       "ogTitle": "Detalhe do Produto",
       "titlePrefix": "Produto"
+    },
+    "related": {
+      "title": "Produtos relacionados",
+      "subtitle": "Veja mais opcoes dentro desta categoria.",
+      "states": {
+        "errorTitle": "Nao foi possivel carregar os relacionados",
+        "errorDescription": "Tente novamente em alguns instantes.",
+        "retry": "Tentar novamente",
+        "emptyTitle": "Sem produtos relacionados",
+        "emptyDescription": "Nao encontramos outros itens nesta categoria."
+      },
+      "pagination": {
+        "previous": "Anterior",
+        "next": "Proxima",
+        "page": "Pagina",
+        "nav": "Paginacao"
+      }
     }
   },
   "secondary": {

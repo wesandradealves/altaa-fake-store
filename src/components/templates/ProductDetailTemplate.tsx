@@ -7,6 +7,7 @@ import { useMetadata } from '@/hooks/useMetadata';
 import StateMessage from '@/components/molecules/StateMessage';
 import ProductDetailSkeleton from '@/components/molecules/ProductDetailSkeleton';
 import ProductDetail from '@/components/organisms/ProductDetail';
+import RelatedProducts from '@/components/organisms/RelatedProducts';
 import content from '@/config/content.json';
 
 interface Props {
@@ -74,17 +75,20 @@ const ProductDetailTemplate = ({ id }: Props) => {
           description={content.productDetail.states.emptyDescription}
         />
       ) : product ? (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <ProductDetail
-            product={product}
-            labels={labels}
-            backLabel={content.productDetail.backLabel}
-          />
-        </motion.div>
+        <>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ProductDetail
+              product={product}
+              labels={labels}
+              backLabel={content.productDetail.backLabel}
+            />
+          </motion.div>
+          <RelatedProducts category={product.category} currentProductId={product.id} />
+        </>
       ) : null}
     </section>
   );

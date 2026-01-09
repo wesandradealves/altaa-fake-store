@@ -7,6 +7,7 @@ import { useMetadata } from '@/hooks/useMetadata';
 import FilterBar from '@/components/molecules/FilterBar';
 import ProductCardSkeleton from '@/components/molecules/ProductCardSkeleton';
 import StateMessage from '@/components/molecules/StateMessage';
+import Pagination from '@/components/molecules/Pagination';
 import ProductGrid from '@/components/organisms/ProductGrid';
 import content from '@/config/content.json';
 
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const ProductsTemplate = ({ initialCategory }: Props) => {
+  const pageSize = 8;
   const resolvedInitialCategory = useMemo(
     () => (initialCategory ? initialCategory.trim() : 'all'),
     [initialCategory]
@@ -47,9 +49,11 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
 
   const [category, setCategory] = useState(resolvedInitialCategory);
   const [sort, setSort] = useState('price-asc');
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     setCategory(resolvedInitialCategory);
+    setPage(1);
   }, [resolvedInitialCategory]);
 
   const normalizedCategory = useMemo(
@@ -92,12 +96,34 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
     return copy.sort(sorter);
   }, [products, sort]);
 
+  const totalPages = useMemo(() => Math.ceil(sortedProducts.length / pageSize), [
+    pageSize,
+    sortedProducts.length,
+  ]);
+
+  useEffect(() => {
+    if (page > totalPages && totalPages > 0) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
+  const pagedProducts = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return sortedProducts.slice(start, start + pageSize);
+  }, [page, pageSize, sortedProducts]);
+
   const handleCategoryChange = useCallback((value: string) => {
     setCategory(value);
+    setPage(1);
   }, []);
 
   const handleSortChange = useCallback((value: string) => {
     setSort(value);
+    setPage(1);
+  }, []);
+
+  const handlePageChange = useCallback((value: number) => {
+    setPage(value);
   }, []);
 
   const handleRetry = useCallback(() => {
@@ -167,7 +193,16 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
             description={content.products.states.emptyDescription}
           />
         ) : (
-          <ProductGrid products={sortedProducts} priceLabel={content.products.card.priceLabel} />
+          <>
+            <ProductGrid products={pagedProducts} priceLabel={content.products.card.priceLabel} />
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              labels={content.products.pagination}
+              className="pt-6"
+            />
+          </>
         )}
       </div>
     </section>
