@@ -9,8 +9,8 @@
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "jest --passWithNoTests",
-    "test:unit": "jest --passWithNoTests",
+    "test": "NODE_ENV=test jest --passWithNoTests",
+    "test:unit": "NODE_ENV=test jest --passWithNoTests",
     "vercel-build": "npm run test:unit && next build",
     "lint:watch": "chokidar '**/*.{js,ts,jsx,tsx}' -c 'eslint --fix --no-warn-ignored {path}'",
     "prepare": "husky && husky install"
