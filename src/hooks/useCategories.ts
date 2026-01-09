@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCategories } from '@/services/fakeStore';
+import { isEmptyResult, resolveQueryError } from '@/hooks/queryUtils';
 
 interface UseCategoriesResult {
   categories: string[];
@@ -18,13 +19,12 @@ export const useCategories = (): UseCategoriesResult => {
 
   const categories = data ?? [];
   const loading = isPending || isFetching;
-  const resolvedError = error instanceof Error ? error.message : error ? 'Unexpected error' : null;
+  const resolvedError = resolveQueryError(error);
 
-  const isEmpty = useMemo(() => !loading && !resolvedError && categories.length === 0, [
-    loading,
-    resolvedError,
-    categories.length,
-  ]);
+  const isEmpty = useMemo(
+    () => isEmptyResult(loading, resolvedError, categories.length),
+    [loading, resolvedError, categories.length]
+  );
 
   const refresh = useCallback(() => {
     void refetch();

@@ -1,6 +1,7 @@
 'use client';
 
 import { memo, useCallback, useMemo } from 'react';
+import { range } from '@/utils';
 
 interface Labels {
   previous: string;
@@ -19,7 +20,7 @@ interface Props {
 
 const Pagination = ({ currentPage, totalPages, onPageChange, labels, className }: Props) => {
   const pages = useMemo(
-    () => Array.from({ length: totalPages }, (_, index) => index + 1),
+    () => range(totalPages).map((index) => index + 1),
     [totalPages]
   );
 

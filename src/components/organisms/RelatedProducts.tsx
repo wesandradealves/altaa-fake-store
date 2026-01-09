@@ -60,10 +60,7 @@ const RelatedProducts = ({ category, currentProductId }: Props) => {
     [error, loading, relatedProducts.length]
   );
 
-  const skeletons = useMemo(
-    () => range(pageSize).map((index) => <ProductCardSkeleton key={index} />),
-    [pageSize]
-  );
+  const skeletons = range(pageSize).map((index) => <ProductCardSkeleton key={index} />);
 
   return (
     <section className="mt-12 space-y-6">
