@@ -23,18 +23,21 @@ const theme = {
   _breakpoints,
 };
 
+let interceptorsInitialized = false;
+
 export default function ClientProviders({ children }: { children: React.ReactNode }) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const { scrollY } = useScroll({
     container: scrollRef,
   });
+  const [isHydrated, setIsHydrated] = useState(false);
   const persister = useMemo(() => {
-    if (typeof window === 'undefined') return null;
+    if (!isHydrated || typeof window === 'undefined') return null;
     return createSyncStoragePersister({
       storage: window.localStorage,
       key: 'bdm-web3:react-query',
     });
-  }, []);
+  }, [isHydrated]);
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -49,6 +52,10 @@ export default function ClientProviders({ children }: { children: React.ReactNod
       })
   );
   const [scrollPosition, setScrollPosition] = useState<number>(0);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = scrollY.onChange((n) => {
@@ -120,6 +127,8 @@ function LoaderSetup() {
   const { setLoading } = useLoader();
 
   useEffect(() => {
+    if (interceptorsInitialized) return;
+    interceptorsInitialized = true;
     setupInterceptors(setLoading);
   }, [setLoading]);
 

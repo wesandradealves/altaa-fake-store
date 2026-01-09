@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 interface LoaderContextProps {
   isLoading: boolean;
@@ -10,9 +10,9 @@ const LoaderContext = createContext<LoaderContextProps | undefined>(undefined);
 export const LoaderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const setLoading = (loading: boolean) => {
+  const setLoading = useCallback((loading: boolean) => {
     setIsLoading(loading);
-  };
+  }, []);
 
   return (
     <LoaderContext.Provider value={{ isLoading, setLoading }}>
