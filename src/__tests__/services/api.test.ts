@@ -15,12 +15,10 @@ jest.mock('axios', () => ({
   },
 }));
 
-const loadSetupInterceptors = () => {
-  let setupInterceptors: (setLoading: (loading: boolean) => void) => void;
-  jest.isolateModules(() => {
-    ({ setupInterceptors } = require('@/services/api'));
-  });
-  return setupInterceptors;
+const loadSetupInterceptors = async () => {
+  jest.resetModules();
+  const apiModule = await import('@/services/api');
+  return apiModule.setupInterceptors;
 };
 
 describe('api service', () => {
@@ -30,8 +28,8 @@ describe('api service', () => {
     localStorage.clear();
   });
 
-  it('registra interceptors apenas uma vez', () => {
-    const setupInterceptors = loadSetupInterceptors();
+  it('registra interceptors apenas uma vez', async () => {
+    const setupInterceptors = await loadSetupInterceptors();
     const setLoading = jest.fn();
 
     setupInterceptors(setLoading);
@@ -42,7 +40,7 @@ describe('api service', () => {
   });
 
   it('controla loading e injeta token nas requisicoes', async () => {
-    const setupInterceptors = loadSetupInterceptors();
+    const setupInterceptors = await loadSetupInterceptors();
     const setLoading = jest.fn();
 
     setupInterceptors(setLoading);
