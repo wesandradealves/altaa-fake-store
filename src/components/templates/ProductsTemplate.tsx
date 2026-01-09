@@ -159,6 +159,7 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
             description={content.products.states.errorDescription}
             actionLabel={content.products.states.retry}
             onAction={handleRetry}
+            tone="alert"
           />
         ) : isEmpty ? (
           <StateMessage

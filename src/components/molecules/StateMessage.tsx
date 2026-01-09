@@ -8,11 +8,22 @@ interface Props {
   actionLabel?: string;
   onAction?: () => void;
   className?: string;
+  tone?: 'status' | 'alert';
 }
 
-const StateMessage = ({ title, description, actionLabel, onAction, className }: Props) => {
+const StateMessage = ({
+  title,
+  description,
+  actionLabel,
+  onAction,
+  className,
+  tone = 'status',
+}: Props) => {
   return (
     <div
+      role={tone}
+      aria-live={tone === 'alert' ? 'assertive' : 'polite'}
+      aria-atomic="true"
       className={[
         'w-full rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-white',
         className,

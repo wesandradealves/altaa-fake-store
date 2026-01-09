@@ -9,6 +9,7 @@ import Badge from '@/components/atoms/Badge';
 import Price from '@/components/atoms/Price';
 import InfoRow from '@/components/molecules/InfoRow';
 import RatingRow from '@/components/molecules/RatingRow';
+import { encodeCategorySlug } from '@/utils';
 
 const DetailShell = styled.section`
   display: flex;
@@ -67,6 +68,7 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
   const description = useMemo(() => product.description.trim(), [product.description]);
   const ratingValue = useMemo(() => product.rating?.rate ?? 0, [product.rating?.rate]);
   const ratingCount = useMemo(() => product.rating?.count ?? 0, [product.rating?.count]);
+  const categoryHref = useMemo(() => `/categoria/${encodeCategorySlug(category)}`, [category]);
 
   const zoomRef = useCallback((node: HTMLDivElement | null) => {
     if (!node) return;
@@ -124,9 +126,11 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
         <Link href={backHref} className="text-gray-300 transition hover:text-white">
           {backLabel}
         </Link>
-        <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-gray-200">
-          {category}
-        </Badge>
+        <Link href={categoryHref} className="inline-flex">
+          <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-gray-200 hover:bg-white/20">
+            {category}
+          </Badge>
+        </Link>
       </div>
 
       <DetailGrid>
@@ -155,9 +159,11 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
               <Price className="text-xl font-semibold text-white" value={product.price} />
             </InfoRow>
             <InfoRow label={labels.category}>
-              <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-gray-200">
-                {category}
-              </Badge>
+              <Link href={categoryHref} className="inline-flex">
+                <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-gray-200 hover:bg-white/20">
+                  {category}
+                </Badge>
+              </Link>
             </InfoRow>
           </div>
 

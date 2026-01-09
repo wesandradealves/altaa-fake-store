@@ -66,6 +66,7 @@ const ProductDetailTemplate = ({ id }: Props) => {
           description={content.productDetail.states.errorDescription}
           actionLabel={content.productDetail.states.retry}
           onAction={handleRetry}
+          tone="alert"
         />
       ) : isEmpty ? (
         <StateMessage
