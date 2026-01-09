@@ -5,6 +5,7 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useScroll } from 'motion/react';
 import { LoaderProvider, useLoader } from '@/context/spinner';
 import { AppProvider } from '@/context/app';
+import { AccessibilityProvider } from '@/context/accessibility';
 import Spinner from '@/components/spinner/spinner';
 import Header from '@/components/header/header';
 import Footer from '@/components/footer/footer';
@@ -39,32 +40,34 @@ export default function ClientProviders({ children }: { children: React.ReactNod
     <ThemeProvider theme={theme}>
       <LoaderProvider>
         <LoaderSetup />
-        <AppProvider>
-          <Suspense fallback={<div>{content.common.loading}</div>}>
-            <StyledJsxRegistry>
-              <AnimatePresence
-                mode="wait"
-                initial={true}
-                onExitComplete={() => window.scrollTo(0, 0)}
-              >
-                <App id="primary">
-                  <motion.div
-                    className="min-h-screen flex flex-col"
-                    initial={{ x: 0, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: 0, opacity: 0 }}
-                    ref={scrollRef}
-                  >
-                    <Header scrollPosition={scrollPosition} />
-                    {children}
-                    <Footer />
-                  </motion.div>
-                  <Spinner />
-                </App>
-              </AnimatePresence>
-            </StyledJsxRegistry>
-          </Suspense>
-        </AppProvider>
+        <AccessibilityProvider>
+          <AppProvider>
+            <Suspense fallback={<div>{content.common.loading}</div>}>
+              <StyledJsxRegistry>
+                <AnimatePresence
+                  mode="wait"
+                  initial={true}
+                  onExitComplete={() => window.scrollTo(0, 0)}
+                >
+                  <App id="primary">
+                    <motion.div
+                      className="min-h-screen flex flex-col"
+                      initial={{ x: 0, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: 0, opacity: 0 }}
+                      ref={scrollRef}
+                    >
+                      <Header scrollPosition={scrollPosition} />
+                      {children}
+                      <Footer />
+                    </motion.div>
+                    <Spinner />
+                  </App>
+                </AnimatePresence>
+              </StyledJsxRegistry>
+            </Suspense>
+          </AppProvider>
+        </AccessibilityProvider>
       </LoaderProvider>
       <GlobalStyle />
     </ThemeProvider>

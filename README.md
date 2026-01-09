@@ -23,6 +23,7 @@ Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto se
 - Menu de categorias dinamico (rota `/categoria/[...slug]`) com foco em acessibilidade
 - Links de categoria nos cards e no detalhe
 - Thumbnails com lazyload
+- Controle de acessibilidade (alto contraste e ajuste de fonte)
 - Cache client-side para dados da API com fallback offline
 - PWA com cache offline (app shell, imagens e API)
 - Estados de loading, erro e vazio
@@ -92,12 +93,12 @@ Escolhi **Next.js** para manter a arquitetura do boilerplate (App Router + layou
 
 - Testes unitarios com Jest + Testing Library (hooks, services, componentes e templates).
 - E2E com Playwright para manifest, offline e cache.
-- Lighthouse PWA via script dedicado (gera relatorio).
+- Lighthouse (performance, acessibilidade, boas praticas e SEO) via script dedicado.
 - Husky executa `lint` e `test:unit` em pre-commit e pre-push.
 - Deploy (`vercel-build`) roda lint + testes antes do build.
 
 Para rodar E2E localmente: `npx playwright install`.
-O relatorio do Lighthouse fica em `.lighthouse/pwa.html`.
+O relatorio do Lighthouse fica em `.lighthouse/lighthouse.html`.
 
 ## Trade-offs
 
