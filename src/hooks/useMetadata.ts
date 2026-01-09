@@ -18,22 +18,34 @@ export function useMetadata({
   favicon,
 }: MetadataOptions) {
   useEffect(() => {
-    const setMetaTag = (name: string, content: string | undefined) => {
-      if (!content) return;
-      let meta = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
+    const setMetaTag = (
+      key: string,
+      content: string | undefined,
+      attribute: 'name' | 'property'
+    ) => {
+      const fallbackAttribute = attribute === 'name' ? 'property' : 'name';
+      let meta = document.querySelector(`meta[${attribute}="${key}"]`);
+      if (!meta) {
+        meta = document.querySelector(`meta[${fallbackAttribute}="${key}"]`);
+      }
+      if (!content) {
+        meta?.remove();
+        return;
+      }
       if (!meta) {
         meta = document.createElement('meta');
-        meta.setAttribute('name', name);
         document.head.appendChild(meta);
       }
+      meta.setAttribute(attribute, key);
+      meta.removeAttribute(fallbackAttribute);
       meta.setAttribute('content', content);
     };
 
     if (title) document.title = title;
-    setMetaTag('description', description);
-    setMetaTag('keywords', keywords);
-    setMetaTag('og:title', ogTitle);
-    setMetaTag('og:image', ogImage);
+    setMetaTag('description', description, 'name');
+    setMetaTag('keywords', keywords, 'name');
+    setMetaTag('og:title', ogTitle, 'property');
+    setMetaTag('og:image', ogImage, 'property');
 
     if (favicon) {
       let link: HTMLLinkElement | null = document.querySelector('link[rel="icon"]');

@@ -10,7 +10,7 @@ Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto se
 - **UI:** Material UI (Selects)
 - **Animacoes:** motion/react
 - **HTTP Client:** Axios
-- **Cache:** React Query
+- **Cache:** React Query + persistencia local (Query Persister)
 - **PWA:** Service Worker + Workbox (@ducanh2912/next-pwa)
 - **Storybook:** Storybook 8 (documentacao e testes visuais)
 - **Testes:** Jest + Testing Library + Playwright
@@ -26,8 +26,8 @@ Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto se
 - Links de categoria nos cards e no detalhe
 - Thumbnails com lazyload
 - Controle de acessibilidade (alto contraste e ajuste de fonte)
-- Cache client-side persistente com React Query e fallback offline
-- PWA com cache offline (app shell, imagens e API)
+- Cache client-side persistente com React Query
+- PWA com cache offline (app shell, imagens e API via Service Worker)
 - Estados de loading, erro e vazio
 - SEO basico via hook de metadata
 - Storybook para visualizar estados dos componentes com mocks de dados
@@ -79,6 +79,7 @@ src/
   services/                # Axios + servicos Fake Store
   config/                  # Textos (pt-BR)
   assets/                  # SCSS, variaveis e tokens
+  stories/                 # Fixtures para Storybook
 ```
 
 - **Atomic Design:** atoms, molecules, organisms e templates.
@@ -95,11 +96,18 @@ Escolhi **Next.js** para manter a arquitetura do boilerplate (App Router + layou
 
 - Paginacao client-side porque a Fake Store API nao oferece paginacao nativa.
 - Interceptors do Axios para controle de loading e token.
-- React Query com cache persistente local, revalidacao e fallback offline.
-- Service Worker com runtime caching para API, assets e imagens.
+- React Query com cache persistente local e revalidacao.
+- Service Worker com runtime caching para API, assets e imagens (offline).
 - `motion/react` para transicoes leves e declarativas.
 - `useMetadata` para controlar title, description e OG sem duplicar metadata no layout.
 - `memo`, `useCallback` e `useMemo` aplicados para evitar renders desnecessarios.
+
+## Nota de qualidade e DRY
+
+- Manter **uma unica camada de cache de dados** (React Query + persister). Evitar cache manual em services.
+- Evitar duplicar fixtures: usar `src/stories/fixtures` para stories e mocks.
+- Preferir helpers reutilizaveis para listas/skeletons e manter logica centralizada.
+- Priorizar `useMetadata` para SEO dinamico nas paginas.
 
 ## Qualidade e automacao
 

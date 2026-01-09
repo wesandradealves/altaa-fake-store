@@ -15,9 +15,11 @@ import {
 import { useCategories } from '@/hooks/useCategories';
 import { encodeCategorySlug } from '@/utils';
 import content from '@/config/content.json';
+import CategoriesMenuSkeleton from '@/components/molecules/CategoriesMenuSkeleton';
 
 const CategoriesMenu = () => {
   const { categories, loading, error, isEmpty } = useCategories();
+  const [hydrated, setHydrated] = useState(false);
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -160,6 +162,10 @@ const CategoriesMenu = () => {
   );
 
   useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
     const handleShortcut = (event: globalThis.KeyboardEvent) => {
       if (!event.altKey || event.key.toLowerCase() !== 'c') return;
       const target = event.target as HTMLElement | null;
@@ -186,6 +192,10 @@ const CategoriesMenu = () => {
     if (isEmpty) return content.app.categoriesMenu.empty;
     return '';
   }, [error, isEmpty]);
+
+  if (!hydrated) {
+    return <CategoriesMenuSkeleton />;
+  }
 
   const showSkeleton = loading;
 

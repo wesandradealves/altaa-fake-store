@@ -63,15 +63,22 @@ const applyToDocument = (highContrast: boolean, fontScale: FontScale) => {
 const AccessibilityContext = createContext<AccessibilityContextValue | undefined>(undefined);
 
 export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [highContrast, setHighContrast] = useState<boolean>(readStoredContrast);
-  const [fontScale, setFontScale] = useState<FontScale>(readStoredFontScale);
+  const [highContrast, setHighContrast] = useState<boolean>(false);
+  const [fontScale, setFontScale] = useState<FontScale>(DEFAULT_FONT_SCALE);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (!isClient()) return;
+    setHighContrast(readStoredContrast());
+    setFontScale(readStoredFontScale());
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated || !isClient()) return;
     localStorage.setItem(STORAGE_KEYS.contrast, highContrast ? '1' : '0');
     localStorage.setItem(STORAGE_KEYS.fontScale, String(fontScale));
     applyToDocument(highContrast, fontScale);
-  }, [highContrast, fontScale]);
+  }, [highContrast, hydrated, fontScale]);
 
   const toggleContrast = useCallback(() => {
     setHighContrast((prev) => !prev);

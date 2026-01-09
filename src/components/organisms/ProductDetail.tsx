@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import type { Product } from '@/types/product';
 import Badge from '@/components/atoms/Badge';
@@ -69,8 +69,10 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
   const ratingValue = useMemo(() => product.rating?.rate ?? 0, [product.rating?.rate]);
   const ratingCount = useMemo(() => product.rating?.count ?? 0, [product.rating?.count]);
   const categoryHref = useMemo(() => `/categoria/${encodeCategorySlug(category)}`, [category]);
+  const zoomFrameRef = useRef<HTMLDivElement | null>(null);
 
-  const zoomRef = useCallback((node: HTMLDivElement | null) => {
+  useEffect(() => {
+    const node = zoomFrameRef.current;
     if (!node) return;
 
     const canHover =
@@ -134,7 +136,7 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
       </div>
 
       <DetailGrid>
-        <ZoomFrame ref={zoomRef}>
+        <ZoomFrame ref={zoomFrameRef}>
           <Image
             src={product.image}
             alt={title}

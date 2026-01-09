@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { Product } from '@/types/product';
 import { fetchProducts, fetchProductsByCategory } from '@/services/fakeStore';
+import { isEmptyResult, resolveQueryError } from '@/hooks/queryUtils';
 
 interface UseProductsOptions {
   category?: string;
@@ -27,13 +28,12 @@ export const useProducts = (options: UseProductsOptions = {}): UseProductsResult
 
   const products: Product[] = data ?? [];
   const loading = isPending || isFetching;
-  const resolvedError = error instanceof Error ? error.message : error ? 'Unexpected error' : null;
+  const resolvedError = resolveQueryError(error);
 
-  const isEmpty = useMemo(() => !loading && !resolvedError && products.length === 0, [
-    loading,
-    resolvedError,
-    products.length,
-  ]);
+  const isEmpty = useMemo(
+    () => isEmptyResult(loading, resolvedError, products.length),
+    [loading, resolvedError, products.length]
+  );
 
   const refresh = useCallback(() => {
     void refetch();

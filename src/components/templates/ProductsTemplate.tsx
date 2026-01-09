@@ -4,6 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useCategories } from '@/hooks/useCategories';
 import { useProducts } from '@/hooks/useProducts';
 import { useMetadata } from '@/hooks/useMetadata';
+import { usePagination } from '@/hooks/usePagination';
+import { range } from '@/utils';
+import DataState from '@/components/molecules/DataState';
 import FilterBar from '@/components/molecules/FilterBar';
 import ProductCardSkeleton from '@/components/molecules/ProductCardSkeleton';
 import StateMessage from '@/components/molecules/StateMessage';
@@ -49,25 +52,20 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
 
   const [category, setCategory] = useState(resolvedInitialCategory);
   const [sort, setSort] = useState('price-asc');
-  const [page, setPage] = useState(1);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setCategory(resolvedInitialCategory);
-    setPage(1);
-  }, [resolvedInitialCategory]);
+    setHydrated(true);
+  }, []);
 
   const normalizedCategory = useMemo(
     () => (category === 'all' ? undefined : category),
     [category]
   );
 
-  const {
-    products,
-    loading,
-    error,
-    isEmpty,
-    refresh: refreshProducts,
-  } = useProducts({ category: normalizedCategory });
+  const { products, loading, error, isEmpty, refresh: refreshProducts } = useProducts({
+    category: normalizedCategory,
+  });
 
   const {
     categories,
@@ -77,12 +75,16 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
   } = useCategories();
 
   const categoryOptions = useMemo(() => {
-    const options = ['all', ...categories];
+    const baseCategories = hydrated ? categories : [];
+    const options = ['all', ...baseCategories];
     if (category !== 'all' && !options.includes(category)) {
       options.push(category);
     }
     return options;
-  }, [categories, category]);
+  }, [category, categories, hydrated]);
+
+  const effectiveCategoriesLoading = !hydrated || categoriesLoading;
+  const effectiveCategoriesError = hydrated ? categoriesError : null;
 
   const sortedProducts = useMemo(() => {
     const copy = [...products];
@@ -96,35 +98,42 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
     return copy.sort(sorter);
   }, [products, sort]);
 
-  const totalPages = useMemo(() => Math.ceil(sortedProducts.length / pageSize), [
-    pageSize,
-    sortedProducts.length,
-  ]);
+  const { page, setPage, totalPages, pagedItems: pagedProducts } = usePagination(
+    sortedProducts,
+    pageSize
+  );
+
+  const effectiveLoading = !hydrated || loading;
+  const effectiveError = hydrated ? error : null;
+  const effectiveIsEmpty = hydrated ? isEmpty : false;
 
   useEffect(() => {
-    if (page > totalPages && totalPages > 0) {
-      setPage(totalPages);
-    }
-  }, [page, totalPages]);
-
-  const pagedProducts = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return sortedProducts.slice(start, start + pageSize);
-  }, [page, pageSize, sortedProducts]);
-
-  const handleCategoryChange = useCallback((value: string) => {
-    setCategory(value);
+    setCategory(resolvedInitialCategory);
     setPage(1);
-  }, []);
+  }, [resolvedInitialCategory, setCategory, setPage]);
 
-  const handleSortChange = useCallback((value: string) => {
-    setSort(value);
-    setPage(1);
-  }, []);
+  const handleCategoryChange = useCallback(
+    (value: string) => {
+      setCategory(value);
+      setPage(1);
+    },
+    [setPage]
+  );
 
-  const handlePageChange = useCallback((value: number) => {
-    setPage(value);
-  }, []);
+  const handleSortChange = useCallback(
+    (value: string) => {
+      setSort(value);
+      setPage(1);
+    },
+    [setPage]
+  );
+
+  const handlePageChange = useCallback(
+    (value: number) => {
+      setPage(value);
+    },
+    [setPage]
+  );
 
   const handleRetry = useCallback(() => {
     refreshProducts();
@@ -132,8 +141,8 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
   }, [refreshCategories, refreshProducts]);
 
   const skeletons = useMemo(
-    () => Array.from({ length: 8 }, (_, index) => <ProductCardSkeleton key={index} />),
-    []
+    () => range(pageSize).map((index) => <ProductCardSkeleton key={index} />),
+    [pageSize]
   );
 
   return (
@@ -153,7 +162,7 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
           </p>
         </div>
         <div className="self-start rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-gray-300 lg:self-end">
-          {loading
+          {effectiveLoading
             ? content.common.loading
             : `${sortedProducts.length} ${content.common.itemsLabel}`}
         </div>
@@ -165,8 +174,8 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
           category={category}
           sort={sort}
           sortOptions={sortOptions}
-          loading={categoriesLoading}
-          error={categoriesError}
+          loading={effectiveCategoriesLoading}
+          error={effectiveCategoriesError}
           onCategoryChange={handleCategoryChange}
           onSortChange={handleSortChange}
           labels={{
@@ -177,22 +186,31 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
           }}
         />
 
-        {loading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">{skeletons}</div>
-        ) : error ? (
-          <StateMessage
-            title={content.products.states.errorTitle}
-            description={content.products.states.errorDescription}
-            actionLabel={content.products.states.retry}
-            onAction={handleRetry}
-            tone="alert"
-          />
-        ) : isEmpty ? (
-          <StateMessage
-            title={content.products.states.emptyTitle}
-            description={content.products.states.emptyDescription}
-          />
-        ) : (
+        <DataState
+          loading={effectiveLoading}
+          error={effectiveError}
+          isEmpty={effectiveIsEmpty}
+          loadingFallback={
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+              {skeletons}
+            </div>
+          }
+          errorFallback={
+            <StateMessage
+              title={content.products.states.errorTitle}
+              description={content.products.states.errorDescription}
+              actionLabel={content.products.states.retry}
+              onAction={handleRetry}
+              tone="alert"
+            />
+          }
+          emptyFallback={
+            <StateMessage
+              title={content.products.states.emptyTitle}
+              description={content.products.states.emptyDescription}
+            />
+          }
+        >
           <>
             <ProductGrid products={pagedProducts} priceLabel={content.products.card.priceLabel} />
             <Pagination
@@ -203,7 +221,7 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
               className="pt-6"
             />
           </>
-        )}
+        </DataState>
       </div>
     </section>
   );

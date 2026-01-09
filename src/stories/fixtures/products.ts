@@ -1,0 +1,89 @@
+import type { Product } from '@/types/product';
+
+export const sampleCategories = ['electronics', 'jewelery', "men's clothing", "women's clothing"];
+
+export const sampleProducts: Product[] = [
+  {
+    id: 1,
+    title: 'Produto Alpha',
+    price: 109.95,
+    description: 'Descricao do produto Alpha',
+    category: 'electronics',
+    image: 'https://placehold.co/600x600/png',
+    rating: { rate: 4.5, count: 120 },
+  },
+  {
+    id: 2,
+    title: 'Produto Beta',
+    price: 79.9,
+    description: 'Descricao do produto Beta',
+    category: 'jewelery',
+    image: 'https://placehold.co/600x600/png',
+    rating: { rate: 4.2, count: 48 },
+  },
+  {
+    id: 3,
+    title: 'Produto Gamma',
+    price: 55.5,
+    description: 'Descricao do produto Gamma',
+    category: "men's clothing",
+    image: 'https://placehold.co/600x600/png',
+    rating: { rate: 4.1, count: 32 },
+  },
+  {
+    id: 4,
+    title: 'Produto Delta',
+    price: 132.0,
+    description: 'Descricao do produto Delta',
+    category: "women's clothing",
+    image: 'https://placehold.co/600x600/png',
+    rating: { rate: 3.9, count: 20 },
+  },
+  {
+    id: 5,
+    title: 'Produto Epsilon',
+    price: 89.0,
+    description: 'Descricao do produto Epsilon',
+    category: 'electronics',
+    image: 'https://placehold.co/600x600/png',
+    rating: { rate: 4.8, count: 76 },
+  },
+  {
+    id: 6,
+    title: 'Produto Zeta',
+    price: 42.0,
+    description: 'Descricao do produto Zeta',
+    category: 'electronics',
+    image: 'https://placehold.co/600x600/png',
+    rating: { rate: 4.0, count: 15 },
+  },
+  {
+    id: 7,
+    title: 'Produto Eta',
+    price: 64.0,
+    description: 'Descricao do produto Eta',
+    category: 'jewelery',
+    image: 'https://placehold.co/600x600/png',
+    rating: { rate: 4.3, count: 19 },
+  },
+  {
+    id: 8,
+    title: 'Produto Theta',
+    price: 92.0,
+    description: 'Descricao do produto Theta',
+    category: "men's clothing",
+    image: 'https://placehold.co/600x600/png',
+    rating: { rate: 3.8, count: 13 },
+  },
+  {
+    id: 9,
+    title: 'Produto Iota',
+    price: 140.0,
+    description: 'Descricao do produto Iota',
+    category: 'electronics',
+    image: 'https://placehold.co/600x600/png',
+    rating: { rate: 4.9, count: 200 },
+  },
+];
+
+export const sampleProduct = sampleProducts[0];

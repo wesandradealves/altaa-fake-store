@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { Product } from '@/types/product';
 import { fetchProductById } from '@/services/fakeStore';
+import { resolveQueryError } from '@/hooks/queryUtils';
 
 interface UseProductResult {
   product: Product | null;
@@ -25,14 +26,7 @@ export const useProduct = (id?: number | string): UseProductResult => {
 
   const product: Product | null = data ?? null;
   const loading = normalizedId === null ? false : isPending || isFetching;
-  const resolvedError =
-    normalizedId === null
-      ? null
-      : error instanceof Error
-        ? error.message
-        : error
-          ? 'Unexpected error'
-          : null;
+  const resolvedError = normalizedId === null ? null : resolveQueryError(error);
 
   const refresh = useCallback(() => {
     if (normalizedId === null) return;

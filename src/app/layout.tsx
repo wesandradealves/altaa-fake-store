@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import '@/assets/scss/globals.scss';
 import ClientProviders from '@/app/client';
 import content from '@/config/content.json';
+import { getApiBaseUrl } from '@/config/api';
 
 export const metadata: Metadata = {
   applicationName: content.app.nameFallback,
@@ -19,11 +20,7 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_URL ??
-    process.env.NEXT_PUBLIC_API_URL_DEV ??
-    process.env.NEXT_PUBLIC_API_URL_HML ??
-    '';
+  const apiBaseUrl = getApiBaseUrl();
 
   return (
     <html lang="pt-br">

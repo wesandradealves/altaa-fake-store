@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { sampleCategories } from '@/stories/fixtures/products';
 import CategoriesMenu from './CategoriesMenu';
 
 const meta: Meta<typeof CategoriesMenu> = {
@@ -14,7 +15,7 @@ export const Default: Story = {
   parameters: {
     mockData: {
       categories: {
-        categories: ['electronics', 'jewelery', "men's clothing"],
+        categories: sampleCategories,
       },
     },
   },

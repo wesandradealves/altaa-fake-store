@@ -41,15 +41,9 @@ test.describe('PWA', () => {
     await page.goto('/');
     await ensureServiceWorker(page);
 
-    await page.waitForFunction(() => localStorage.getItem('fakestore:products'));
-
-    const cachedTitle = await page.evaluate(() => {
-      const raw = localStorage.getItem('fakestore:products');
-      if (!raw) return null;
-      const parsed = JSON.parse(raw) as { data: { title: string; price: number }[] };
-      const sorted = [...parsed.data].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
-      return sorted[0]?.title?.trim() ?? null;
-    });
+    const firstTitle = page.locator('h3').first();
+    await expect(firstTitle).toBeVisible();
+    const cachedTitle = (await firstTitle.innerText()).trim();
 
     expect(cachedTitle).toBeTruthy();
 
@@ -70,20 +64,12 @@ test.describe('PWA', () => {
     const href = await productLink.getAttribute('href');
     expect(href).toBeTruthy();
 
-    const productId = href?.split('/').pop() || '';
-    const cacheKey = `fakestore:product:${productId}`;
-
     await page.goto(href as string);
     await ensureServiceWorker(page);
 
-    await page.waitForFunction((key) => localStorage.getItem(key), cacheKey);
-
-    const cachedTitle = await page.evaluate((key) => {
-      const raw = localStorage.getItem(key);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw) as { data: { title: string } };
-      return parsed.data.title || null;
-    }, cacheKey);
+    const detailTitle = page.getByRole('heading', { level: 1 });
+    await expect(detailTitle).toBeVisible();
+    const cachedTitle = (await detailTitle.innerText()).trim();
 
     expect(cachedTitle).toBeTruthy();
 

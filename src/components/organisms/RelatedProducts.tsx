@@ -2,10 +2,13 @@
 
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useProducts } from '@/hooks/useProducts';
+import { usePagination } from '@/hooks/usePagination';
 import ProductCardSkeleton from '@/components/molecules/ProductCardSkeleton';
 import Pagination from '@/components/molecules/Pagination';
 import StateMessage from '@/components/molecules/StateMessage';
+import DataState from '@/components/molecules/DataState';
 import ProductGrid from '@/components/organisms/ProductGrid';
+import { range } from '@/utils';
 import content from '@/config/content.json';
 
 interface Props {
@@ -17,7 +20,7 @@ const pageSize = 4;
 
 const RelatedProducts = ({ category, currentProductId }: Props) => {
   const normalizedCategory = useMemo(() => category.trim(), [category]);
-  const [page, setPage] = useState(1);
+  const [hydrated, setHydrated] = useState(false);
 
   const { products, loading, error, refresh } = useProducts({ category: normalizedCategory });
 
@@ -26,43 +29,39 @@ const RelatedProducts = ({ category, currentProductId }: Props) => {
     [currentProductId, products]
   );
 
-  const totalPages = useMemo(
-    () => Math.ceil(relatedProducts.length / pageSize),
-    [relatedProducts.length]
+  const { page, setPage, totalPages, pagedItems: pagedProducts } = usePagination(
+    relatedProducts,
+    pageSize
   );
 
   useEffect(() => {
-    setPage(1);
-  }, [normalizedCategory, currentProductId]);
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
-    if (page > totalPages && totalPages > 0) {
-      setPage(totalPages);
-    }
-  }, [page, totalPages]);
+    setPage(1);
+  }, [currentProductId, normalizedCategory, setPage]);
 
-  const pagedProducts = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return relatedProducts.slice(start, start + pageSize);
-  }, [page, relatedProducts]);
-
-  const handlePageChange = useCallback((value: number) => {
-    setPage(value);
-  }, []);
+  const handlePageChange = useCallback(
+    (value: number) => {
+      setPage(value);
+    },
+    [setPage]
+  );
 
   const handleRetry = useCallback(() => {
     refresh();
   }, [refresh]);
 
+  const effectiveLoading = !hydrated || loading;
+  const effectiveError = hydrated ? error : null;
+
   const isEmpty = useMemo(
-    () => !loading && !error && relatedProducts.length === 0,
-    [error, loading, relatedProducts.length]
+    () => !effectiveLoading && !effectiveError && relatedProducts.length === 0,
+    [effectiveError, effectiveLoading, relatedProducts.length]
   );
 
-  const skeletons = useMemo(
-    () => Array.from({ length: pageSize }, (_, index) => <ProductCardSkeleton key={index} />),
-    []
-  );
+  const skeletons = range(pageSize).map((index) => <ProductCardSkeleton key={index} />);
 
   return (
     <section className="mt-12 space-y-6">
@@ -71,22 +70,31 @@ const RelatedProducts = ({ category, currentProductId }: Props) => {
         <p className="text-sm text-gray-300">{content.productDetail.related.subtitle}</p>
       </div>
 
-      {loading ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">{skeletons}</div>
-      ) : error ? (
-        <StateMessage
-          title={content.productDetail.related.states.errorTitle}
-          description={content.productDetail.related.states.errorDescription}
-          actionLabel={content.productDetail.related.states.retry}
-          onAction={handleRetry}
-          tone="alert"
-        />
-      ) : isEmpty ? (
-        <StateMessage
-          title={content.productDetail.related.states.emptyTitle}
-          description={content.productDetail.related.states.emptyDescription}
-        />
-      ) : (
+      <DataState
+        loading={effectiveLoading}
+        error={effectiveError}
+        isEmpty={isEmpty}
+        loadingFallback={
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            {skeletons}
+          </div>
+        }
+        errorFallback={
+          <StateMessage
+            title={content.productDetail.related.states.errorTitle}
+            description={content.productDetail.related.states.errorDescription}
+            actionLabel={content.productDetail.related.states.retry}
+            onAction={handleRetry}
+            tone="alert"
+          />
+        }
+        emptyFallback={
+          <StateMessage
+            title={content.productDetail.related.states.emptyTitle}
+            description={content.productDetail.related.states.emptyDescription}
+          />
+        }
+      >
         <>
           <ProductGrid products={pagedProducts} priceLabel={content.products.card.priceLabel} />
           <Pagination
@@ -97,7 +105,7 @@ const RelatedProducts = ({ category, currentProductId }: Props) => {
             className="pt-6"
           />
         </>
-      )}
+      </DataState>
     </section>
   );
 };
