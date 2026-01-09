@@ -79,7 +79,7 @@ export const GlobalStyle = createGlobalStyle `
         font-style: normal;
         overflow-x: hidden;
         font-size: ${pxToRem(16)};
-        background: ${props => props.theme._colors.primary.bdm9};
+        background: ${props => props.theme._colors.primary.background};
         * { 
             transition: 30ms ease-in-out all;
         }
@@ -116,7 +116,7 @@ export const GlobalStyle = createGlobalStyle `
 
     .pace {
         &-progress {
-            background-color: ${props => props.theme._colors.primary.bdm0} !important;
+            background-color: ${props => props.theme._colors.primary.accent} !important;
         }
     } 
 

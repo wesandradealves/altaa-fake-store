@@ -10,8 +10,11 @@ declare module 'styled-components' {
     };
     _colors: {
       primary: {
-        bdm0: string;
-        bdm9: string;
+        background: string;
+        accent: string;
+        text: string;
+        surface: string;
+        muted: string;
         [key: string]: string;
       };
       [key: string]: Record<string, string>;

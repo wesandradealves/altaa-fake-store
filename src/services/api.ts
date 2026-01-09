@@ -1,15 +1,9 @@
 import axios from 'axios';
 
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_URL ??
-  process.env.NEXT_PUBLIC_API_URL_DEV ??
-  process.env.NEXT_PUBLIC_API_URL_HML ??
-  'https://fakestoreapi.com';
-
-const apiBasePath = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
+const apiBaseUrl = process.env.NEXT_PUBLIC_FAKE_STORE_API_URL || 'https://fakestoreapi.com';
 
 const api = axios.create({
-  baseURL: apiBaseUrl ? `${apiBaseUrl}${apiBasePath}` : undefined,
+  baseURL: apiBaseUrl,
   timeout: 120000,
   headers: {
     'Content-Type': 'application/json',
