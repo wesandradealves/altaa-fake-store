@@ -3,10 +3,15 @@
     "nameFallback": "Projeto Base",
     "nav": {
       "home": "Inicio",
-      "secondary": "Secundario"
+      "categories": "Categorias"
+    },
+    "categoriesMenu": {
+      "loading": "Carregando categorias...",
+      "empty": "Nenhuma categoria encontrada",
+      "error": "Categorias indisponiveis"
     },
     "footer": {
-      "tagline": "Base com app router + styled-components + motion"
+      "tagline": "Desenvolvido por <b>Wesley Alves</b>"
     }
   },
   "common": {
@@ -22,6 +27,10 @@
       "sort": "Ordenacao",
       "allCategories": "Todas as categorias",
       "categoriesUnavailable": "Categorias indisponiveis"
+    },
+    "category": {
+      "titlePrefix": "Categoria",
+      "subtitlePrefix": "Produtos da categoria"
     },
     "sortOptions": {
       "priceAsc": "Preco: menor para maior",

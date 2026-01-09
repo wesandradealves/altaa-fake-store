@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useCategories } from '@/hooks/useCategories';
 import { useProducts } from '@/hooks/useProducts';
 import { useMetadata } from '@/hooks/useMetadata';
@@ -17,18 +17,40 @@ const sortOptions = [
   { value: 'name-desc', label: content.products.sortOptions.nameDesc },
 ];
 
-const ProductsTemplate = () => {
+interface Props {
+  initialCategory?: string;
+}
+
+const ProductsTemplate = ({ initialCategory }: Props) => {
+  const resolvedInitialCategory = useMemo(
+    () => (initialCategory ? initialCategory.trim() : 'all'),
+    [initialCategory]
+  );
+
+  const isCategoryPage = useMemo(
+    () => resolvedInitialCategory !== 'all',
+    [resolvedInitialCategory]
+  );
+
   useMetadata({
-    title: content.products.meta.title,
+    title: isCategoryPage
+      ? `${content.products.meta.title} - ${resolvedInitialCategory}`
+      : content.products.meta.title,
     description: content.products.meta.description,
     keywords: content.products.meta.keywords,
-    ogTitle: content.products.meta.ogTitle,
+    ogTitle: isCategoryPage
+      ? `${content.products.meta.ogTitle} - ${resolvedInitialCategory}`
+      : content.products.meta.ogTitle,
     ogImage: '/favicon.ico',
     favicon: '/favicon.ico',
   });
 
-  const [category, setCategory] = useState('all');
+  const [category, setCategory] = useState(resolvedInitialCategory);
   const [sort, setSort] = useState('price-asc');
+
+  useEffect(() => {
+    setCategory(resolvedInitialCategory);
+  }, [resolvedInitialCategory]);
 
   const normalizedCategory = useMemo(
     () => (category === 'all' ? undefined : category),
@@ -50,7 +72,13 @@ const ProductsTemplate = () => {
     refresh: refreshCategories,
   } = useCategories();
 
-  const categoryOptions = useMemo(() => ['all', ...categories], [categories]);
+  const categoryOptions = useMemo(() => {
+    const options = ['all', ...categories];
+    if (category !== 'all' && !options.includes(category)) {
+      options.push(category);
+    }
+    return options;
+  }, [categories, category]);
 
   const sortedProducts = useMemo(() => {
     const copy = [...products];
@@ -87,9 +115,15 @@ const ProductsTemplate = () => {
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-[0.3em] text-gray-400">{content.products.brand}</p>
-          <h1 className="text-3xl font-semibold lg:text-5xl">{content.products.title}</h1>
+          <h1 className="text-3xl font-semibold lg:text-5xl">
+            {isCategoryPage
+              ? `${content.products.category.titlePrefix}: ${resolvedInitialCategory}`
+              : content.products.title}
+          </h1>
           <p className="text-sm text-gray-300">
-            {content.products.subtitle}
+            {isCategoryPage
+              ? `${content.products.category.subtitlePrefix} ${resolvedInitialCategory}.`
+              : content.products.subtitle}
           </p>
         </div>
         <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-gray-300">
