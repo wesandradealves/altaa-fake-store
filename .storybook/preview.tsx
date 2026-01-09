@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'styled-components';
 import { AccessibilityProvider } from '../src/context/accessibility';
 import { LoaderProvider } from '../src/context/spinner';
@@ -35,17 +36,28 @@ const preview: Preview = {
           context.parameters?.mockData ?? {};
       }
 
+      const queryClient = new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      });
+
       return (
-        <ThemeProvider theme={theme}>
-          <LoaderProvider>
-            <AccessibilityProvider>
-              <GlobalStyle />
-              <div className="min-h-screen bg-[#0B0F14] text-white">
-                <Story />
-              </div>
-            </AccessibilityProvider>
-          </LoaderProvider>
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <LoaderProvider>
+              <AccessibilityProvider>
+                <GlobalStyle />
+                <div className="min-h-screen bg-[#0B0F14] text-white">
+                  <Story />
+                </div>
+              </AccessibilityProvider>
+            </LoaderProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
       );
     },
   ],

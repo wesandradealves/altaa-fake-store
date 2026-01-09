@@ -15,19 +15,22 @@ const config: StorybookConfig = {
   },
   staticDirs: ['../public'],
   webpackFinal: async (storybookConfig) => {
-    const alias = storybookConfig.resolve?.alias || {};
+    const existingAlias = storybookConfig.resolve?.alias || {};
     const mocksRoot = path.resolve(__dirname, 'mocks');
+    const resolvedAliases = Array.isArray(existingAlias)
+      ? existingAlias
+      : Object.entries(existingAlias).map(([name, alias]) => ({ name, alias }));
 
     storybookConfig.resolve = {
       ...storybookConfig.resolve,
-      alias: {
-        ...alias,
-        '@': path.resolve(__dirname, '../src'),
-        '@/hooks/useCategories': path.join(mocksRoot, 'useCategories'),
-        '@/hooks/useProducts': path.join(mocksRoot, 'useProducts'),
-        '@/hooks/useProduct': path.join(mocksRoot, 'useProduct'),
-        '@/hooks/useMetadata': path.join(mocksRoot, 'useMetadata'),
-      },
+      alias: [
+        { name: '@/hooks/useCategories', alias: path.join(mocksRoot, 'useCategories') },
+        { name: '@/hooks/useProducts', alias: path.join(mocksRoot, 'useProducts') },
+        { name: '@/hooks/useProduct', alias: path.join(mocksRoot, 'useProduct') },
+        { name: '@/hooks/useMetadata', alias: path.join(mocksRoot, 'useMetadata') },
+        { name: '@', alias: path.resolve(__dirname, '../src') },
+        ...resolvedAliases,
+      ],
     };
 
     return storybookConfig;
