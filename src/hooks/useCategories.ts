@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchCategories } from '@/services/fakeStore';
 
 interface UseCategoriesResult {
@@ -10,52 +11,29 @@ interface UseCategoriesResult {
 }
 
 export const useCategories = (): UseCategoriesResult => {
-  const [categories, setCategories] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, error, isPending, isFetching, refetch } = useQuery({
+    queryKey: ['categories'],
+    queryFn: fetchCategories,
+  });
 
-  const loadCategories = useCallback(async (isActive: () => boolean) => {
-    setLoading(true);
-    setError(null);
+  const categories = data ?? [];
+  const loading = isPending || isFetching;
+  const resolvedError = error instanceof Error ? error.message : error ? 'Unexpected error' : null;
 
-    try {
-      const data = await fetchCategories();
-      if (isActive()) {
-        setCategories(data);
-      }
-    } catch (err) {
-      if (isActive()) {
-        setError(err instanceof Error ? err.message : 'Unexpected error');
-      }
-    } finally {
-      if (isActive()) {
-        setLoading(false);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-    loadCategories(() => active);
-    return () => {
-      active = false;
-    };
-  }, [loadCategories]);
-
-  const isEmpty = useMemo(() => !loading && !error && categories.length === 0, [
+  const isEmpty = useMemo(() => !loading && !resolvedError && categories.length === 0, [
     loading,
-    error,
+    resolvedError,
     categories.length,
   ]);
 
   const refresh = useCallback(() => {
-    loadCategories(() => true);
-  }, [loadCategories]);
+    void refetch();
+  }, [refetch]);
 
   return {
     categories,
     loading,
-    error,
+    error: resolvedError,
     isEmpty,
     refresh,
   };

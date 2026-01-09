@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import type { Product } from '@/types/product';
 import { fetchProducts, fetchProductsByCategory } from '@/services/fakeStore';
 
@@ -16,52 +17,32 @@ interface UseProductsResult {
 
 export const useProducts = (options: UseProductsOptions = {}): UseProductsResult => {
   const { category } = options;
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const normalizedCategory = useMemo(() => (category ? category.trim() : undefined), [category]);
 
-  const loadProducts = useCallback(async (isActive: () => boolean) => {
-    setLoading(true);
-    setError(null);
+  const { data, error, isPending, isFetching, refetch } = useQuery({
+    queryKey: ['products', normalizedCategory ?? 'all'],
+    queryFn: () =>
+      normalizedCategory ? fetchProductsByCategory(normalizedCategory) : fetchProducts(),
+  });
 
-    try {
-      const data = category ? await fetchProductsByCategory(category) : await fetchProducts();
-      if (isActive()) {
-        setProducts(data);
-      }
-    } catch (err) {
-      if (isActive()) {
-        setError(err instanceof Error ? err.message : 'Unexpected error');
-      }
-    } finally {
-      if (isActive()) {
-        setLoading(false);
-      }
-    }
-  }, [category]);
+  const products: Product[] = data ?? [];
+  const loading = isPending || isFetching;
+  const resolvedError = error instanceof Error ? error.message : error ? 'Unexpected error' : null;
 
-  useEffect(() => {
-    let active = true;
-    loadProducts(() => active);
-    return () => {
-      active = false;
-    };
-  }, [loadProducts]);
-
-  const isEmpty = useMemo(() => !loading && !error && products.length === 0, [
+  const isEmpty = useMemo(() => !loading && !resolvedError && products.length === 0, [
     loading,
-    error,
+    resolvedError,
     products.length,
   ]);
 
   const refresh = useCallback(() => {
-    loadProducts(() => true);
-  }, [loadProducts]);
+    void refetch();
+  }, [refetch]);
 
   return {
     products,
     loading,
-    error,
+    error: resolvedError,
     isEmpty,
     refresh,
   };
