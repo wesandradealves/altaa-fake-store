@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import type { Product } from '@/types/product';
 import Badge from '@/components/atoms/Badge';
@@ -23,6 +23,26 @@ const DetailGrid = styled.div`
   @media (min-width: 1024px) {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     align-items: start;
+  }
+`;
+
+const ZoomFrame = styled.div`
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: zoom-in;
+  --zoom: 1;
+  --zoom-x: 50%;
+  --zoom-y: 50%;
+
+  img {
+    transform: scale(var(--zoom));
+    transform-origin: var(--zoom-x) var(--zoom-y);
+    transition: transform 140ms ease-out;
+    will-change: transform;
   }
 `;
 
@@ -48,6 +68,56 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
   const ratingValue = useMemo(() => product.rating?.rate ?? 0, [product.rating?.rate]);
   const ratingCount = useMemo(() => product.rating?.count ?? 0, [product.rating?.count]);
 
+  const zoomRef = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return;
+
+    const canHover =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(hover: hover)').matches;
+
+    node.style.setProperty('--zoom', '1');
+    node.style.setProperty('--zoom-x', '50%');
+    node.style.setProperty('--zoom-y', '50%');
+
+    if (!canHover) return;
+
+    let rafId = 0;
+
+    const updateZoom = (event: PointerEvent) => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const rect = node.getBoundingClientRect();
+        const x = Math.min(Math.max(0, event.clientX - rect.left), rect.width);
+        const y = Math.min(Math.max(0, event.clientY - rect.top), rect.height);
+        const xPercent = rect.width ? (x / rect.width) * 100 : 50;
+        const yPercent = rect.height ? (y / rect.height) * 100 : 50;
+
+        node.style.setProperty('--zoom', '2.4');
+        node.style.setProperty('--zoom-x', `${xPercent}%`);
+        node.style.setProperty('--zoom-y', `${yPercent}%`);
+      });
+    };
+
+    const resetZoom = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      node.style.setProperty('--zoom', '1');
+      node.style.setProperty('--zoom-x', '50%');
+      node.style.setProperty('--zoom-y', '50%');
+    };
+
+    node.addEventListener('pointerenter', updateZoom);
+    node.addEventListener('pointermove', updateZoom);
+    node.addEventListener('pointerleave', resetZoom);
+
+    return () => {
+      node.removeEventListener('pointerenter', updateZoom);
+      node.removeEventListener('pointermove', updateZoom);
+      node.removeEventListener('pointerleave', resetZoom);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <DetailShell className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white shadow-xl lg:p-10">
       <div className="flex flex-wrap items-center gap-4 text-sm">
@@ -60,9 +130,15 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
       </div>
 
       <DetailGrid>
-        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-white/5">
-          <Image src={product.image} alt={title} fill sizes="(max-width: 1024px) 100vw, 50vw" />
-        </div>
+        <ZoomFrame ref={zoomRef}>
+          <Image
+            src={product.image}
+            alt={title}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-contain p-6"
+          />
+        </ZoomFrame>
         <div className="flex flex-col gap-6">
           <div className="space-y-3">
             <h1 className="text-2xl font-semibold lg:text-4xl">{title}</h1>
