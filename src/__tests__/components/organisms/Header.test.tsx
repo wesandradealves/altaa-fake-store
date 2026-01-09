@@ -2,14 +2,6 @@ import { render, screen } from '@testing-library/react';
 import Header from '@/components/header/header';
 import content from '@/config/content.json';
 
-jest.mock('next/dynamic', () => ({
-  __esModule: true,
-  default: (_importer: unknown, options?: { loading?: () => JSX.Element }) => {
-    const DynamicComponent = () => (options?.loading ? options.loading() : null);
-    return DynamicComponent;
-  },
-}));
-
 jest.mock('@/components/molecules/CategoriesMenu', () => ({
   __esModule: true,
   default: () => <div data-testid="categories-menu" />,

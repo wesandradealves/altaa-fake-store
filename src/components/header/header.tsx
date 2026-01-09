@@ -1,17 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import classNames from 'classnames';
 import Logo from '@/components/atoms/Logo';
-import CategoriesMenuSkeleton from '@/components/molecules/CategoriesMenuSkeleton';
+import CategoriesMenu from '@/components/molecules/CategoriesMenu';
 import AccessibilityControls from '@/components/molecules/AccessibilityControls';
 import content from '@/config/content.json';
-
-const CategoriesMenu = dynamic(() => import('@/components/molecules/CategoriesMenu'), {
-  ssr: false,
-  loading: () => <CategoriesMenuSkeleton />,
-});
 
 interface Props {
   scrollPosition?: number;

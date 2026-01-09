@@ -6,6 +6,7 @@ import ProductCardSkeleton from '@/components/molecules/ProductCardSkeleton';
 import Pagination from '@/components/molecules/Pagination';
 import StateMessage from '@/components/molecules/StateMessage';
 import ProductGrid from '@/components/organisms/ProductGrid';
+import { range } from '@/utils';
 import content from '@/config/content.json';
 
 interface Props {
@@ -60,8 +61,8 @@ const RelatedProducts = ({ category, currentProductId }: Props) => {
   );
 
   const skeletons = useMemo(
-    () => Array.from({ length: pageSize }, (_, index) => <ProductCardSkeleton key={index} />),
-    []
+    () => range(pageSize).map((index) => <ProductCardSkeleton key={index} />),
+    [pageSize]
   );
 
   return (

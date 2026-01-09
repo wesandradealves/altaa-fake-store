@@ -1,4 +1,4 @@
-import { decodeCategorySlug, encodeCategorySlug, pxToRem } from '@/utils';
+import { decodeCategorySlug, encodeCategorySlug, pxToRem, range } from '@/utils';
 
 describe('utils', () => {
   it('converte px para rem com base padrao', () => {
@@ -20,5 +20,14 @@ describe('utils', () => {
   it('retorna valor original quando decode falha', () => {
     const invalid = '%E0%A4%A';
     expect(decodeCategorySlug(invalid)).toBe(invalid);
+  });
+
+  it('gera range a partir do tamanho informado', () => {
+    expect(range(3)).toEqual([0, 1, 2]);
+  });
+
+  it('retorna array vazio quando tamanho invalido', () => {
+    expect(range(0)).toEqual([]);
+    expect(range(-2)).toEqual([]);
   });
 });

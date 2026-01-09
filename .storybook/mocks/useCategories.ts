@@ -1,3 +1,4 @@
+import { sampleCategories } from '@/stories/fixtures/products';
 import { getMockData } from './mockData';
 
 interface UseCategoriesResult {
@@ -8,7 +9,7 @@ interface UseCategoriesResult {
   refresh: () => void;
 }
 
-const defaultCategories = ['electronics', 'jewelery', "men's clothing", "women's clothing"];
+const defaultCategories = sampleCategories;
 
 export const useCategories = (): UseCategoriesResult => {
   const mock = getMockData().categories ?? {};

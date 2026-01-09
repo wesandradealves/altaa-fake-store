@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useCategories } from '@/hooks/useCategories';
 import { useProducts } from '@/hooks/useProducts';
 import { useMetadata } from '@/hooks/useMetadata';
+import { range } from '@/utils';
 import FilterBar from '@/components/molecules/FilterBar';
 import ProductCardSkeleton from '@/components/molecules/ProductCardSkeleton';
 import StateMessage from '@/components/molecules/StateMessage';
@@ -132,8 +133,8 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
   }, [refreshCategories, refreshProducts]);
 
   const skeletons = useMemo(
-    () => Array.from({ length: 8 }, (_, index) => <ProductCardSkeleton key={index} />),
-    []
+    () => range(pageSize).map((index) => <ProductCardSkeleton key={index} />),
+    [pageSize]
   );
 
   return (

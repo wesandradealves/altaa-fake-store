@@ -1,4 +1,5 @@
 import type { Product } from '@/types/product';
+import { sampleProduct } from '@/stories/fixtures/products';
 import { getMockData } from './mockData';
 
 interface UseProductResult {
@@ -10,13 +11,8 @@ interface UseProductResult {
 }
 
 const defaultProduct: Product = {
-  id: 1,
-  title: 'Produto Alpha',
-  price: 109.95,
+  ...sampleProduct,
   description: 'Descricao detalhada do produto Alpha',
-  category: 'electronics',
-  image: 'https://placehold.co/600x600/png',
-  rating: { rate: 4.5, count: 120 },
 };
 
 export const useProduct = (id?: number | string): UseProductResult => {
