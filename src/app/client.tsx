@@ -1,6 +1,5 @@
 'use client';
 
-import { ThemeProvider } from 'styled-components';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
@@ -9,19 +8,14 @@ import { AnimatePresence, motion, useScroll } from 'motion/react';
 import { LoaderProvider, useLoader } from '@/context/spinner';
 import { AppProvider } from '@/context/app';
 import { AccessibilityProvider } from '@/context/accessibility';
+import { ThemeModeProvider } from '@/context/theme';
 import Spinner from '@/components/spinner/spinner';
 import Header from '@/components/header/header';
 import Footer from '@/components/footer/footer';
 import StyledJsxRegistry from './registry';
 import { App, GlobalStyle } from '@/app/style';
 import { setupInterceptors } from '@/services/api';
-import { _colors, _breakpoints } from '@/assets/scss/variables';
 import content from '@/config/content.json';
-
-const theme = {
-  _colors,
-  _breakpoints,
-};
 
 const createMemoryStorage = () => {
   const store = new Map<string, string>();
@@ -77,7 +71,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
   }, [scrollY]);
 
   const contentTree = (
-    <ThemeProvider theme={theme}>
+    <ThemeModeProvider>
       <LoaderProvider>
         <LoaderSetup />
         <AccessibilityProvider>
@@ -110,7 +104,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
         </AccessibilityProvider>
       </LoaderProvider>
       <GlobalStyle />
-    </ThemeProvider>
+    </ThemeModeProvider>
   );
 
   return (

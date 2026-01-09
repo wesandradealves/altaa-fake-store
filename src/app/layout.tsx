@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const apiBaseUrl = getApiBaseUrl();
 
   return (
-    <html lang="pt-br">
+    <html lang="pt-br" data-theme="dark">
       <body
         suppressHydrationWarning={true}
         className={classNames(`
