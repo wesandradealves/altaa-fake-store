@@ -217,7 +217,7 @@ const CategoriesMenu = () => {
         aria-keyshortcuts="Alt+C"
         ref={buttonRef}
         onClick={() => (open ? handleClose() : openWithFocus('first'))}
-        className="flex items-center gap-2 text-sm text-gray-200 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+        className="flex items-center gap-2 text-sm text-[var(--text-muted)] transition hover:text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
       >
         <span>{content.app.nav.categories}</span>
         <span aria-hidden="true" className="text-[10px]">
@@ -229,7 +229,7 @@ const CategoriesMenu = () => {
         role="menu"
         ref={menuRef}
         className={[
-          'absolute left-0 top-full z-50 mt-2 min-w-[220px] origin-top-left rounded-xl border border-white/10 bg-black/90 p-2 transition',
+          'absolute left-0 top-full z-50 mt-2 min-w-[220px] origin-top-left rounded-xl border border-[var(--border)] bg-[color:var(--surface)] p-2 transition',
           open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         ].join(' ')}
       >
@@ -241,7 +241,7 @@ const CategoriesMenu = () => {
             ))}
           </div>
         ) : statusLabel ? (
-          <span role="status" className="block px-3 py-2 text-xs text-gray-400">
+          <span role="status" className="block px-3 py-2 text-xs text-[var(--text-muted)]">
             {statusLabel}
           </span>
         ) : (
@@ -250,7 +250,7 @@ const CategoriesMenu = () => {
               key={item.href}
               href={item.href}
               role="menuitem"
-              className="block rounded-lg px-3 py-2 text-sm text-gray-200 transition hover:bg-white/10 hover:text-white"
+              className="block rounded-lg px-3 py-2 text-sm text-[var(--text-muted)] transition hover:bg-[color:var(--surface-alt)] hover:text-[var(--foreground)]"
               onClick={handleClose}
             >
               {item.label}

@@ -50,7 +50,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, labels, className }
         type="button"
         onClick={handlePrevious}
         disabled={currentPage === 1}
-        className="rounded-full border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-gray-200 transition hover:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-full border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-[var(--text-muted)] transition hover:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {labels.previous}
       </button>
@@ -65,8 +65,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange, labels, className }
             className={[
               'h-9 min-w-9 rounded-full border px-3 text-xs font-semibold transition',
               isActive
-                ? 'border-white/50 bg-white/10 text-white'
-                : 'border-white/10 text-gray-200 hover:border-white/30',
+                ? 'border-white/50 bg-white/10 text-[var(--foreground)]'
+                : 'border-white/10 text-[var(--text-muted)] hover:border-white/30',
             ].join(' ')}
           >
             <span className="sr-only">{labels.page}</span>
@@ -78,7 +78,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, labels, className }
         type="button"
         onClick={handleNext}
         disabled={currentPage === totalPages}
-        className="rounded-full border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-gray-200 transition hover:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-full border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-[var(--text-muted)] transition hover:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {labels.next}
       </button>

@@ -67,7 +67,7 @@ const RelatedProducts = ({ category, currentProductId }: Props) => {
     <section className="mt-12 space-y-6">
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold lg:text-3xl">{content.productDetail.related.title}</h2>
-        <p className="text-sm text-gray-300">{content.productDetail.related.subtitle}</p>
+        <p className="text-sm text-[var(--text-muted)]">{content.productDetail.related.subtitle}</p>
       </div>
 
       <DataState

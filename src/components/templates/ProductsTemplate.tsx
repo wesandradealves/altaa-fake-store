@@ -146,22 +146,24 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
   );
 
   return (
-    <section className="container m-auto max-w-6xl py-12 text-white sm:py-16">
+    <section className="container m-auto max-w-6xl py-12 text-[var(--foreground)] sm:py-16">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl space-y-2">
-          <p className="text-xs uppercase tracking-[0.3em] text-gray-400">{content.products.brand}</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">
+            {content.products.brand}
+          </p>
           <h1 className="text-3xl font-semibold lg:text-5xl">
             {isCategoryPage
               ? `${content.products.category.titlePrefix}: ${resolvedInitialCategory}`
               : content.products.title}
           </h1>
-          <p className="text-sm text-gray-300">
+          <p className="text-sm text-[var(--text-muted)]">
             {isCategoryPage
               ? `${content.products.category.subtitlePrefix} ${resolvedInitialCategory}.`
               : content.products.subtitle}
           </p>
         </div>
-        <div className="self-start rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-gray-300 lg:self-end">
+        <div className="self-start rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-[var(--text-muted)] lg:self-end">
           {effectiveLoading
             ? content.common.loading
             : `${sortedProducts.length} ${content.common.itemsLabel}`}
