@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import CategoriesMenu from '@/components/molecules/CategoriesMenu';
 import { useCategories } from '@/hooks/useCategories';
 import { encodeCategorySlug } from '@/utils';
@@ -11,7 +11,7 @@ jest.mock('@/hooks/useCategories', () => ({
 const mockedUseCategories = useCategories as jest.MockedFunction<typeof useCategories>;
 
 describe('CategoriesMenu', () => {
-  it('renderiza categorias e abre o menu', () => {
+  it('renderiza categorias e abre o menu', async () => {
     const categories = ['electronics', "men's clothing"];
 
     mockedUseCategories.mockReturnValue({
@@ -31,6 +31,10 @@ describe('CategoriesMenu', () => {
     fireEvent.mouseEnter(wrapper);
     const menu = screen.getByRole('menu');
     expect(menu).toHaveClass('opacity-100');
+
+    await waitFor(() => {
+      expect(screen.getByRole('menuitem', { name: categories[0] })).toBeInTheDocument();
+    });
 
     const firstLink = screen.getByRole('menuitem', { name: categories[0] });
     const secondLink = screen.getByRole('menuitem', { name: categories[1] });

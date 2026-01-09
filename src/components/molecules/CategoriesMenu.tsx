@@ -23,6 +23,7 @@ const CategoriesMenu = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const skeletonItems = useMemo(() => Array.from({ length: 4 }, (_, index) => index), []);
 
   const items = useMemo(
     () =>
@@ -181,11 +182,12 @@ const CategoriesMenu = () => {
   }, [handleClose, open, openWithFocus]);
 
   const statusLabel = useMemo(() => {
-    if (loading) return content.app.categoriesMenu.loading;
     if (error) return content.app.categoriesMenu.error;
     if (isEmpty) return content.app.categoriesMenu.empty;
     return '';
-  }, [error, isEmpty, loading]);
+  }, [error, isEmpty]);
+
+  const showSkeleton = loading;
 
   return (
     <div
@@ -221,7 +223,14 @@ const CategoriesMenu = () => {
           open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         ].join(' ')}
       >
-        {statusLabel ? (
+        {showSkeleton ? (
+          <div role="status" className="space-y-2 px-3 py-2" aria-live="polite">
+            <span className="sr-only">{content.app.categoriesMenu.loading}</span>
+            {skeletonItems.map((item) => (
+              <div key={item} className="h-4 w-40 animate-pulse rounded-full bg-white/10" />
+            ))}
+          </div>
+        ) : statusLabel ? (
           <span role="status" className="block px-3 py-2 text-xs text-gray-400">
             {statusLabel}
           </span>
