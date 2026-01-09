@@ -46,6 +46,34 @@
       "ogTitle": "Catalogo Fake Store"
     }
   },
+  "productDetail": {
+    "eyebrow": "Fake Store",
+    "title": "Detalhe do Produto",
+    "subtitle": "Informacoes completas do produto selecionado.",
+    "backLabel": "Voltar para o catalogo",
+    "labels": {
+      "price": "Preco",
+      "category": "Categoria",
+      "description": "Descricao",
+      "rating": "Nota",
+      "ratingCount": "Avaliacoes"
+    },
+    "states": {
+      "loading": "Carregando produto...",
+      "errorTitle": "Nao foi possivel carregar o produto",
+      "errorDescription": "Tente novamente em alguns instantes.",
+      "retry": "Tentar novamente",
+      "emptyTitle": "Produto nao encontrado",
+      "emptyDescription": "Verifique o endereco ou volte ao catalogo."
+    },
+    "meta": {
+      "title": "Detalhe do Produto",
+      "description": "Detalhes do produto selecionado na Fake Store.",
+      "keywords": "produto, detalhe, fake store, ecommerce",
+      "ogTitle": "Detalhe do Produto",
+      "titlePrefix": "Produto"
+    }
+  },
   "secondary": {
     "title": "Area Secundaria",
     "description": "Layout e template secundarios para separar contextos.",
