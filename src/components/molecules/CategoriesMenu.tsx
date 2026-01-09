@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
   type FocusEvent,
-  type KeyboardEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
 import { useCategories } from '@/hooks/useCategories';
 import { encodeCategorySlug } from '@/utils';
@@ -89,7 +89,7 @@ const CategoriesMenu = () => {
   }, []);
 
   const handleKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLDivElement>) => {
+    (event: ReactKeyboardEvent<HTMLDivElement>) => {
       if (event.key === 'Escape' && open) {
         event.preventDefault();
         handleClose();
@@ -159,7 +159,7 @@ const CategoriesMenu = () => {
   );
 
   useEffect(() => {
-    const handleShortcut = (event: KeyboardEvent) => {
+    const handleShortcut = (event: globalThis.KeyboardEvent) => {
       if (!event.altKey || event.key.toLowerCase() !== 'c') return;
       const target = event.target as HTMLElement | null;
       if (target && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) {

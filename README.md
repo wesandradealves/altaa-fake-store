@@ -25,7 +25,7 @@ Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto se
 - Links de categoria nos cards e no detalhe
 - Thumbnails com lazyload
 - Controle de acessibilidade (alto contraste e ajuste de fonte)
-- Cache client-side com React Query e fallback offline
+- Cache client-side persistente com React Query e fallback offline
 - PWA com cache offline (app shell, imagens e API)
 - Estados de loading, erro e vazio
 - SEO basico via hook de metadata
@@ -84,7 +84,7 @@ Escolhi **Next.js** para manter a arquitetura do boilerplate (App Router + layou
 
 - Paginacao client-side porque a Fake Store API nao oferece paginacao nativa.
 - Interceptors do Axios para controle de loading e token.
-- React Query para cache em memoria, revalidacao e fallback offline.
+- React Query com cache persistente local, revalidacao e fallback offline.
 - Service Worker com runtime caching para API, assets e imagens.
 - `motion/react` para transicoes leves e declarativas.
 - `useMetadata` para controlar title, description e OG sem duplicar metadata no layout.
@@ -93,8 +93,8 @@ Escolhi **Next.js** para manter a arquitetura do boilerplate (App Router + layou
 ## Qualidade e automacao
 
 - Testes unitarios com Jest + Testing Library (hooks, services, componentes e templates).
-- E2E com Playwright para manifest, offline e cache.
-- Lighthouse (performance, acessibilidade, boas praticas e SEO) via script dedicado.
+- E2E com Playwright para filtros, ordenacao, paginacao e PWA offline.
+- Lighthouse (performance, acessibilidade, boas praticas e SEO) via script dedicado e CI.
 - Husky executa `lint` e `test:unit` em pre-commit e pre-push.
 - Deploy (`vercel-build`) roda lint + testes antes do build.
 
@@ -103,13 +103,13 @@ O relatorio do Lighthouse fica em `.lighthouse/lighthouse.html`.
 
 ## Trade-offs
 
-- Sem cache persistente compartilhado (apenas no client).
-- Testes e2e focam em PWA/offline; outros fluxos ainda nao sao cobertos.
+- Cache persistente local (nao sincroniza entre dispositivos).
+- Dependencia da Fake Store API para dados reais.
 
 ## Melhorias futuras
 
-- Expandir testes e2e para filtros, ordenacao e paginacao client-side.
-- Automacao de auditorias Lighthouse no CI.
+- Persistir cache em IndexedDB para maior capacidade.
+- Testes e2e para fluxos completos (navegacao de categorias, detalhes e atalhos).
 
 ## Scripts
 

@@ -1,8 +1,10 @@
 'use client';
 
 import { ThemeProvider } from 'styled-components';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { AnimatePresence, motion, useScroll } from 'motion/react';
 import { LoaderProvider, useLoader } from '@/context/spinner';
 import { AppProvider } from '@/context/app';
@@ -26,6 +28,13 @@ export default function ClientProviders({ children }: { children: React.ReactNod
   const { scrollY } = useScroll({
     container: scrollRef,
   });
+  const persister = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+    return createSyncStoragePersister({
+      storage: window.localStorage,
+      key: 'bdm-web3:react-query',
+    });
+  }, []);
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -50,43 +59,60 @@ export default function ClientProviders({ children }: { children: React.ReactNod
     };
   }, [scrollY]);
 
+  const contentTree = (
+    <ThemeProvider theme={theme}>
+      <LoaderProvider>
+        <LoaderSetup />
+        <AccessibilityProvider>
+          <AppProvider>
+            <Suspense fallback={<div>{content.common.loading}</div>}>
+              <StyledJsxRegistry>
+                <AnimatePresence
+                  mode="wait"
+                  initial={true}
+                  onExitComplete={() => window.scrollTo(0, 0)}
+                >
+                  <App id="primary">
+                    <motion.div
+                      className="min-h-screen flex flex-col"
+                      initial={{ x: 0, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: 0, opacity: 0 }}
+                      ref={scrollRef}
+                    >
+                      <Header scrollPosition={scrollPosition} />
+                      {children}
+                      <Footer />
+                    </motion.div>
+                    <Spinner />
+                  </App>
+                </AnimatePresence>
+              </StyledJsxRegistry>
+            </Suspense>
+          </AppProvider>
+        </AccessibilityProvider>
+      </LoaderProvider>
+      <GlobalStyle />
+    </ThemeProvider>
+  );
+
+  if (!persister) {
+    return <QueryClientProvider client={queryClient}>{contentTree}</QueryClientProvider>;
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <LoaderProvider>
-          <LoaderSetup />
-          <AccessibilityProvider>
-            <AppProvider>
-              <Suspense fallback={<div>{content.common.loading}</div>}>
-                <StyledJsxRegistry>
-                  <AnimatePresence
-                    mode="wait"
-                    initial={true}
-                    onExitComplete={() => window.scrollTo(0, 0)}
-                  >
-                    <App id="primary">
-                      <motion.div
-                        className="min-h-screen flex flex-col"
-                        initial={{ x: 0, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: 0, opacity: 0 }}
-                        ref={scrollRef}
-                      >
-                        <Header scrollPosition={scrollPosition} />
-                        {children}
-                        <Footer />
-                      </motion.div>
-                      <Spinner />
-                    </App>
-                  </AnimatePresence>
-                </StyledJsxRegistry>
-              </Suspense>
-            </AppProvider>
-          </AccessibilityProvider>
-        </LoaderProvider>
-        <GlobalStyle />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister,
+        maxAge: 24 * 60 * 60 * 1000,
+        dehydrateOptions: {
+          shouldDehydrateQuery: (query) => query.state.status === 'success',
+        },
+      }}
+    >
+      {contentTree}
+    </PersistQueryClientProvider>
   );
 }
 
