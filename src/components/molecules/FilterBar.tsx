@@ -1,7 +1,7 @@
 'use client';
 
 import { memo, useCallback, useMemo } from 'react';
-import { FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
+import { FormControl, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
 
 interface Option {
   label: string;
@@ -48,26 +48,26 @@ const FilterBar = ({
   const controlSx = useMemo(
     () => ({
       '& .MuiOutlinedInput-root': {
-        backgroundColor: 'rgba(255, 255, 255, 0.06)',
-        color: '#E5E7EB',
+        backgroundColor: 'var(--select-bg)',
+        color: 'var(--select-foreground)',
         '& fieldset': {
-          borderColor: 'rgba(255, 255, 255, 0.2)',
+          borderColor: 'var(--select-border)',
         },
         '&:hover fieldset': {
-          borderColor: 'rgba(255, 255, 255, 0.35)',
+          borderColor: 'var(--select-border-hover)',
         },
         '&.Mui-focused fieldset': {
-          borderColor: '#38BDF8',
+          borderColor: 'var(--select-border-hover)',
         },
       },
       '& .MuiInputLabel-root': {
-        color: '#9CA3AF',
+        color: 'var(--select-muted)',
       },
       '& .MuiInputLabel-root.Mui-focused': {
-        color: '#E5E7EB',
+        color: 'var(--select-foreground)',
       },
       '& .MuiSelect-icon': {
-        color: '#E5E7EB',
+        color: 'var(--select-foreground)',
       },
     }),
     []
@@ -75,9 +75,9 @@ const FilterBar = ({
 
   const menuPaperSx = useMemo(
     () => ({
-      backgroundColor: '#0B0F14',
-      color: '#E5E7EB',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
+      backgroundColor: 'var(--select-bg)',
+      color: 'var(--select-foreground)',
+      border: '1px solid var(--select-border)',
     }),
     []
   );
@@ -85,10 +85,10 @@ const FilterBar = ({
   const menuItemSx = useMemo(
     () => ({
       '&.Mui-selected': {
-        backgroundColor: 'rgba(255, 255, 255, 0.12)',
+        backgroundColor: 'var(--surface-alt)',
       },
       '&.Mui-selected:hover': {
-        backgroundColor: 'rgba(255, 255, 255, 0.18)',
+        backgroundColor: 'var(--surface-alt)',
       },
     }),
     []
@@ -109,18 +109,17 @@ const FilterBar = ({
   );
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-white backdrop-blur sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-[var(--foreground)] backdrop-blur sm:flex-row sm:items-center">
       <FormControl
         size="small"
         className="w-full sm:min-w-[220px] sm:w-auto"
         disabled={loading}
         sx={controlSx}
       >
-        <InputLabel id="category-filter-label">{labels.category}</InputLabel>
         <Select
-          labelId="category-filter-label"
           value={category}
-          label={labels.category}
+          disabled={loading}
+          inputProps={{ 'aria-label': labels.category }}
           onChange={handleCategoryChange}
           MenuProps={{ PaperProps: { sx: menuPaperSx } }}
         >
@@ -139,11 +138,9 @@ const FilterBar = ({
       </FormControl>
 
       <FormControl size="small" className="w-full sm:min-w-[220px] sm:w-auto" sx={controlSx}>
-        <InputLabel id="sort-filter-label">{labels.sort}</InputLabel>
         <Select
-          labelId="sort-filter-label"
           value={sort}
-          label={labels.sort}
+          inputProps={{ 'aria-label': labels.sort }}
           onChange={handleSortChange}
           MenuProps={{ PaperProps: { sx: menuPaperSx } }}
         >

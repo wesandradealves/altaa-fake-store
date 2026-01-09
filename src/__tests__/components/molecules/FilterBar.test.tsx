@@ -34,12 +34,14 @@ describe('FilterBar', () => {
       />
     );
 
-    await user.click(screen.getByLabelText(labels.category));
-    await user.click(screen.getByText('electronics'));
+    const categorySelect = screen.getByRole('combobox', { name: labels.category });
+    await user.click(categorySelect);
+    await user.click(await screen.findByRole('option', { name: 'electronics' }));
     expect(onCategoryChange).toHaveBeenCalledWith('electronics');
 
-    await user.click(screen.getByLabelText(labels.sort));
-    await user.click(screen.getByText('Nome Z-A'));
+    const sortSelect = screen.getByRole('combobox', { name: labels.sort });
+    await user.click(sortSelect);
+    await user.click(await screen.findByRole('option', { name: 'Nome Z-A' }));
     expect(onSortChange).toHaveBeenCalledWith('name-desc');
   });
 
@@ -53,17 +55,32 @@ describe('FilterBar', () => {
         sort="name-asc"
         sortOptions={sortOptions}
         labels={labels}
-        loading
         error="Falha"
         onCategoryChange={jest.fn()}
         onSortChange={jest.fn()}
       />
     );
 
-    const categorySelect = screen.getByLabelText(labels.category);
-    expect(categorySelect).toHaveAttribute('aria-disabled', 'true');
-
+    const categorySelect = screen.getByRole('combobox', { name: labels.category });
     await user.click(categorySelect);
-    expect(screen.getByText(labels.categoriesUnavailable)).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: labels.categoriesUnavailable })).toBeInTheDocument();
+  });
+
+  it('desabilita o filtro de categoria durante carregamento', () => {
+    render(
+      <FilterBar
+        categories={categories}
+        category="all"
+        sort="name-asc"
+        sortOptions={sortOptions}
+        labels={labels}
+        loading
+        onCategoryChange={jest.fn()}
+        onSortChange={jest.fn()}
+      />
+    );
+
+    const categorySelect = screen.getByRole('combobox', { name: labels.category });
+    expect(categorySelect).toHaveAttribute('aria-disabled', 'true');
   });
 });

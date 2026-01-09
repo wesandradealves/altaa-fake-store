@@ -1,12 +1,24 @@
 import { render, screen } from '@testing-library/react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider, type DefaultTheme } from 'styled-components';
 import { App, GlobalStyle } from '@/app/style';
 
-const theme = {
+const theme: DefaultTheme = {
+  mode: 'dark',
+  _breakpoints: {
+    sm: '0',
+    md: '0',
+    lg: '0',
+  },
   _colors: {
     primary: {
       background: '#000000',
       accent: '#ffffff',
+      accentSoft: '#ffffff',
+      text: '#ffffff',
+      textStrong: '#000000',
+      surface: '#111111',
+      surfaceAlt: '#222222',
+      muted: '#999999',
     },
   },
 };

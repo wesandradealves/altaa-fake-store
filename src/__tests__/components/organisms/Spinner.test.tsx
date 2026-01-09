@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider, type DefaultTheme } from 'styled-components';
 import Spinner from '@/components/spinner/spinner';
 import { useLoader } from '@/context/spinner';
 
@@ -9,10 +9,23 @@ jest.mock('@/context/spinner', () => ({
 
 const mockedUseLoader = useLoader as jest.MockedFunction<typeof useLoader>;
 
-const theme = {
+const theme: DefaultTheme = {
+  mode: 'dark',
+  _breakpoints: {
+    sm: '0',
+    md: '0',
+    lg: '0',
+  },
   _colors: {
     primary: {
+      background: '#000000',
       accent: '#00ff00',
+      accentSoft: '#ffffff',
+      text: '#ffffff',
+      textStrong: '#000000',
+      surface: '#111111',
+      surfaceAlt: '#222222',
+      muted: '#999999',
     },
   },
 };

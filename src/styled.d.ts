@@ -2,6 +2,7 @@ import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
+    mode: 'dark' | 'light';
     _breakpoints: {
       sm: string;
       md: string;
@@ -12,8 +13,11 @@ declare module 'styled-components' {
       primary: {
         background: string;
         accent: string;
+        accentSoft: string;
         text: string;
+        textStrong: string;
         surface: string;
+        surfaceAlt: string;
         muted: string;
         [key: string]: string;
       };

@@ -52,11 +52,13 @@ const ProductDetailTemplate = ({ id }: Props) => {
   );
 
   return (
-    <section className="container m-auto max-w-6xl py-12 text-white sm:py-16">
+    <section className="container m-auto max-w-6xl py-12 text-[var(--foreground)] sm:py-16">
       <div className="mb-8 max-w-2xl space-y-2">
-        <p className="text-xs uppercase tracking-[0.3em] text-gray-400">{content.productDetail.eyebrow}</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">
+          {content.productDetail.eyebrow}
+        </p>
         <h1 className="text-3xl font-semibold lg:text-5xl">{content.productDetail.title}</h1>
-        <p className="text-sm text-gray-300">{content.productDetail.subtitle}</p>
+        <p className="text-sm text-[var(--text-muted)]">{content.productDetail.subtitle}</p>
       </div>
 
       {loading ? (

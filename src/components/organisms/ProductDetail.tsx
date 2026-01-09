@@ -123,13 +123,16 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
   }, []);
 
   return (
-    <DetailShell className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white shadow-xl lg:p-10">
+    <DetailShell className="rounded-3xl border border-white/10 bg-white/5 p-6 text-[var(--foreground)] shadow-xl lg:p-10">
       <div className="flex flex-wrap items-center gap-4 text-sm">
-        <Link href={backHref} className="text-gray-300 transition hover:text-white">
+        <Link
+          href={backHref}
+          className="text-[var(--text-muted)] transition hover:text-[var(--foreground)]"
+        >
           {backLabel}
         </Link>
         <Link href={categoryHref} className="inline-flex">
-          <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-gray-200 hover:bg-white/20">
+          <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-[var(--foreground)] hover:bg-white/20">
             {category}
           </Badge>
         </Link>
@@ -158,11 +161,11 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <InfoRow label={labels.price}>
-              <Price className="text-xl font-semibold text-white" value={product.price} />
+              <Price className="text-xl font-semibold text-[var(--foreground)]" value={product.price} />
             </InfoRow>
             <InfoRow label={labels.category}>
               <Link href={categoryHref} className="inline-flex">
-                <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-gray-200 hover:bg-white/20">
+                <Badge className="bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-[var(--foreground)] hover:bg-white/20">
                   {category}
                 </Badge>
               </Link>
@@ -170,8 +173,10 @@ const ProductDetail = ({ product, labels, backLabel, backHref = '/' }: Props) =>
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-sm uppercase tracking-[0.2em] text-gray-400">{labels.description}</h2>
-            <p className="text-sm leading-relaxed text-gray-200">{description}</p>
+            <h2 className="text-sm uppercase tracking-[0.2em] text-[var(--text-muted)]">
+              {labels.description}
+            </h2>
+            <p className="text-sm leading-relaxed text-[var(--foreground)]">{description}</p>
           </div>
         </div>
       </DetailGrid>

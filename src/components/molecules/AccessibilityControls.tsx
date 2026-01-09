@@ -4,6 +4,22 @@ import classNames from 'classnames';
 import content from '@/config/content.json';
 import { FONT_SCALE_LEVELS, useAccessibility } from '@/context/accessibility';
 
+const ContrastIcon = ({ className }: { className?: string }) => (
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="8" />
+    <path d="M12 4a8 8 0 000 16V4z" fill="currentColor" stroke="none" />
+  </svg>
+);
+
 const AccessibilityControls = () => {
   const {
     highContrast,
@@ -26,8 +42,8 @@ const AccessibilityControls = () => {
       <button
         type="button"
         className={classNames(
-          'rounded-full border border-white/10 px-2 py-1 text-[11px] uppercase tracking-[0.2em] text-gray-200 transition',
-          canDecrease ? 'hover:border-white/30' : 'cursor-not-allowed opacity-50'
+          'rounded-full border border-[var(--border)] px-2 py-1 text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] transition',
+          canDecrease ? 'hover:border-[var(--accent)]' : 'cursor-not-allowed opacity-50'
         )}
         onClick={decreaseFont}
         aria-label={content.app.accessibility.decreaseFont}
@@ -37,7 +53,7 @@ const AccessibilityControls = () => {
       </button>
       <button
         type="button"
-        className="rounded-full border border-white/10 px-2 py-1 text-[11px] uppercase tracking-[0.2em] text-gray-200 transition hover:border-white/30"
+        className="rounded-full border border-[var(--border)] px-2 py-1 text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] transition hover:border-[var(--accent)]"
         onClick={resetFont}
         aria-label={content.app.accessibility.resetFont}
       >
@@ -46,8 +62,8 @@ const AccessibilityControls = () => {
       <button
         type="button"
         className={classNames(
-          'rounded-full border border-white/10 px-2 py-1 text-[11px] uppercase tracking-[0.2em] text-gray-200 transition',
-          canIncrease ? 'hover:border-white/30' : 'cursor-not-allowed opacity-50'
+          'rounded-full border border-[var(--border)] px-2 py-1 text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] transition',
+          canIncrease ? 'hover:border-[var(--accent)]' : 'cursor-not-allowed opacity-50'
         )}
         onClick={increaseFont}
         aria-label={content.app.accessibility.increaseFont}
@@ -58,16 +74,16 @@ const AccessibilityControls = () => {
       <button
         type="button"
         className={classNames(
-          'rounded-full border border-white/10 px-3 py-1 text-[11px] uppercase tracking-[0.2em] transition',
+          'rounded-full border border-[var(--border)] px-3 py-1 text-[11px] uppercase tracking-[0.2em] transition',
           highContrast
-            ? 'bg-white/10 text-white'
-            : 'text-gray-200 hover:border-white/30'
+            ? 'bg-[var(--surface)] text-[var(--contrast-toggle-foreground)]'
+            : 'text-[var(--text-muted)] hover:border-[var(--accent)]'
         )}
         onClick={toggleContrast}
         aria-label={content.app.accessibility.highContrast}
         aria-pressed={highContrast}
       >
-        {content.app.accessibility.highContrast}
+        <ContrastIcon className="h-4 w-4" />
       </button>
       <span className="sr-only" aria-live="polite">
         {content.app.accessibility.fontLabel} {fontScaleLabel}

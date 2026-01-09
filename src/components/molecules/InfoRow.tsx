@@ -11,8 +11,8 @@ interface Props {
 const InfoRow = ({ label, children, className }: Props) => {
   return (
     <div className={['space-y-1', className].filter(Boolean).join(' ')}>
-      <span className="text-xs uppercase tracking-[0.2em] text-gray-400">{label}</span>
-      <div className="text-base text-white">{children}</div>
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]">{label}</span>
+      <div className="text-base text-[var(--foreground)]">{children}</div>
     </div>
   );
 };
