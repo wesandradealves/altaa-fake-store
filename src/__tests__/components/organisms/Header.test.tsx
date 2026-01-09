@@ -12,6 +12,11 @@ jest.mock('@/components/molecules/AccessibilityControls', () => ({
   default: () => <div data-testid="accessibility-controls" />,
 }));
 
+jest.mock('@/components/molecules/ThemeToggle', () => ({
+  __esModule: true,
+  default: () => <div data-testid="theme-toggle" />,
+}));
+
 describe('Header', () => {
   it('renderiza o header padrao com link inicial', () => {
     render(<Header />);
@@ -21,6 +26,8 @@ describe('Header', () => {
 
     const homeLink = screen.getByRole('link', { name: content.app.nav.home });
     expect(homeLink).toHaveAttribute('href', '/');
+    expect(homeLink).toHaveAttribute('aria-label', content.app.nav.home);
+    expect(homeLink.querySelector('svg')).toBeInTheDocument();
 
     const logoLink = screen.getByRole('link', { name: content.app.logoAlt });
     expect(logoLink).toHaveAttribute('href', '/');
@@ -30,7 +37,7 @@ describe('Header', () => {
     render(<Header scrollPosition={20} />);
 
     const header = screen.getByRole('banner');
-    expect(header).toHaveClass('bg-black/70');
+    expect(header).toHaveClass('bg-[color:var(--surface)]/80');
     expect(header).toHaveClass('backdrop-blur');
   });
 });
