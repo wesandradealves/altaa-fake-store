@@ -2,6 +2,10 @@
 
 Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto segue a arquitetura do boilerplate (registry, services, hooks, context, templates) com atomic design, styled-components e Tailwind.
 
+## API
+
+- Fake Store API: https://fakestoreapi.com/docs
+
 ## Stack
 
 - **Framework:** Next.js 15 (App Router) + React 19
@@ -18,9 +22,10 @@ Aplicacao front-end em React + Next.js consumindo a Fake Store API. O projeto se
 
 ## Funcionalidades
 
-- Listagem de produtos com filtros por categoria e ordenacao (preco/nome)
+- Listagem com titulo, imagem, preco e categoria (layout responsivo)
+- Filtro por categoria e ordenacao (preco asc/desc e nome)
 - Paginacao na listagem (8 por pagina)
-- Detalhe do produto com rating e superzoom de imagem
+- Detalhe do produto com titulo, imagem, descricao, preco, categoria e rating
 - Produtos relacionados na mesma categoria com paginacao (4 por pagina)
 - Menu de categorias dinamico (rota `/categoria/[...slug]`) com foco preso, setas, Esc e atalho Alt+C
 - Links de categoria nos cards e no detalhe
@@ -53,6 +58,11 @@ npm run storybook
 ```
 
 Storybook em `http://localhost:6006`.
+
+## Deploy
+
+- Vercel (link publico): [<adicionar-link>](https://altaa-fake-store.vercel.app/)
+- Repositorio deve estar publico para avaliacao.
 
 ## Variaveis de ambiente
 
@@ -102,18 +112,31 @@ Escolhi **Next.js** para manter a arquitetura do boilerplate (App Router + layou
 - `useMetadata` para controlar title, description e OG sem duplicar metadata no layout.
 - `memo`, `useCallback` e `useMemo` aplicados para evitar renders desnecessarios.
 
+## Trade-offs
+
+- Filtros e paginacao sao client-side por limitacao da API; mais dados carregados por vez.
+- Cache offline exige uma primeira visita online para aquecer o Service Worker.
+- Cache persistente e local (cliente), nao compartilhado entre dispositivos.
+
+## Melhorias futuras
+
+- Integrar `test:ci` em pipeline de CI e publicar relatorio do Lighthouse.
+- Expandir e2e para cenarios de erro/empty, menu e acessibilidade por teclado.
+- Avaliar prefetch e ajustes de cache quando a API suportar paginacao/ordenacao server-side.
+
 ## Nota de qualidade e DRY
 
 - Manter **uma unica camada de cache de dados** (React Query + persister). Evitar cache manual em services.
 - Evitar duplicar fixtures: usar `src/stories/fixtures` para stories e mocks.
 - Preferir helpers reutilizaveis para listas/skeletons e manter logica centralizada.
 - Priorizar `useMetadata` para SEO dinamico nas paginas.
+- Usar Tailwind para classes de componentes; SCSS fica em tokens e globais.
 
 ## Qualidade e automacao
 
 - Testes unitarios com Jest + Testing Library (hooks, services, componentes e templates).
 - E2E com Playwright para filtros, ordenacao, paginacao e PWA offline.
-- Lighthouse (performance, acessibilidade, boas praticas e SEO) via script dedicado e CI.
+- Lighthouse (performance, acessibilidade, boas praticas e SEO) via script dedicado (`test:pwa`).
 - Storybook para testes visuais e revisao de estados dos componentes.
 - Husky executa `lint` e `test:unit` em pre-commit e pre-push.
 - Deploy (`vercel-build`) roda lint + testes antes do build.
@@ -127,10 +150,13 @@ O relatorio do Lighthouse fica em `.lighthouse/lighthouse.html`.
 npm run dev
 npm run build
 npm run start
+npm run start:prod
 npm run lint
+npm run lint:watch
 npm run test
 npm run test:unit
 npm run test:e2e
+npm run test:e2e:ui
 npm run test:pwa
 npm run test:ci
 npm run vercel-build
