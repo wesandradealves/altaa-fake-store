@@ -30,14 +30,6 @@ export default {
     'sm:ms-auto',
     'sm:me-auto',
     'sm:m-auto',
-    {
-      pattern: /^(p|pt|pr|pb|pl|px|py|m|mt|mr|mb|ml|mx|my|w|h|gap)-\[\w+(-\w+)*\]$/,
-      variants: ['sm', 'md', 'lg', 'xl', '2xl'],
-    },
-    {
-      pattern: /^(min-w|min-h|max-w|max-h)-\[\w+(-\w+)*\]$/,
-      variants: ['sm', 'md', 'lg', 'xl', '2xl'],
-    },
   ],
   darkMode: ["class", '[data-theme="dark"]'],
   theme: {
