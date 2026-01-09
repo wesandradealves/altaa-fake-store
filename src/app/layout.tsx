@@ -1,5 +1,5 @@
 import Script from 'next/script';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import classNames from 'classnames';
 import '@/assets/scss/globals.scss';
 import 'slick-carousel/slick/slick.css';
@@ -10,11 +10,14 @@ import content from '@/config/content.json';
 export const metadata: Metadata = {
   applicationName: content.app.nameFallback,
   manifest: '/manifest.json',
-  themeColor: '#0B0F14',
   icons: {
     icon: '/pwa-512x512.png',
     apple: '/pwa-192x192.png',
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#0B0F14',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
