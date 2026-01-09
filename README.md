@@ -101,16 +101,6 @@ Escolhi **Next.js** para manter a arquitetura do boilerplate (App Router + layou
 Para rodar E2E localmente: `npx playwright install`.
 O relatorio do Lighthouse fica em `.lighthouse/lighthouse.html`.
 
-## Trade-offs
-
-- Cache persistente local (nao sincroniza entre dispositivos).
-- Dependencia da Fake Store API para dados reais.
-
-## Melhorias futuras
-
-- Persistir cache em IndexedDB para maior capacidade.
-- Testes e2e para fluxos completos (navegacao de categorias, detalhes e atalhos).
-
 ## Scripts
 
 ```bash
