@@ -46,8 +46,9 @@ test.describe('PWA', () => {
     const cachedTitle = await page.evaluate(() => {
       const raw = localStorage.getItem('fakestore:products');
       if (!raw) return null;
-      const parsed = JSON.parse(raw) as { data: { title: string }[] };
-      return parsed.data[0]?.title ?? null;
+      const parsed = JSON.parse(raw) as { data: { title: string; price: number }[] };
+      const sorted = [...parsed.data].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+      return sorted[0]?.title?.trim() ?? null;
     });
 
     expect(cachedTitle).toBeTruthy();
