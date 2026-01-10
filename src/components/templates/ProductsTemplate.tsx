@@ -26,7 +26,8 @@ interface Props {
 }
 
 const ProductsTemplate = ({ initialCategory }: Props) => {
-  const pageSize = 8;
+  const [gridSize, setGridSize] = useState<4 | 8>(8);
+  const pageSize = gridSize;
   const resolvedInitialCategory = useMemo(
     () => (initialCategory ? initialCategory.trim() : 'all'),
     [initialCategory]
@@ -128,6 +129,14 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
     [setPage]
   );
 
+  const handleGridSizeChange = useCallback(
+    (value: 4 | 8) => {
+      setGridSize(value);
+      setPage(1);
+    },
+    [setPage]
+  );
+
   const handlePageChange = useCallback(
     (value: number) => {
       setPage(value);
@@ -176,10 +185,13 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
           category={category}
           sort={sort}
           sortOptions={sortOptions}
+          gridSize={gridSize}
+          gridLabels={content.products.grid}
           loading={effectiveCategoriesLoading}
           error={effectiveCategoriesError}
           onCategoryChange={handleCategoryChange}
           onSortChange={handleSortChange}
+          onGridSizeChange={handleGridSizeChange}
           labels={{
             category: content.products.filters.category,
             sort: content.products.filters.sort,
@@ -214,7 +226,11 @@ const ProductsTemplate = ({ initialCategory }: Props) => {
           }
         >
           <>
-            <ProductGrid products={pagedProducts} priceLabel={content.products.card.priceLabel} />
+            <ProductGrid
+              products={pagedProducts}
+              priceLabel={content.products.card.priceLabel}
+              gridSize={gridSize}
+            />
             <Pagination
               currentPage={page}
               totalPages={totalPages}

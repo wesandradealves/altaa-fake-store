@@ -60,6 +60,11 @@
       "nameAsc": "Nome: A a Z",
       "nameDesc": "Nome: Z a A"
     },
+    "grid": {
+      "label": "Tamanho do grid",
+      "four": "Mostrar 4",
+      "eight": "Mostrar 8"
+    },
     "states": {
       "errorTitle": "Nao foi possivel carregar os produtos",
       "errorDescription": "Tente novamente em alguns instantes.",
