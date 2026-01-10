@@ -9,6 +9,12 @@ const labels = {
   categoriesUnavailable: 'Categorias indisponiveis',
 };
 
+const gridLabels = {
+  label: 'Tamanho do grid',
+  four: 'Mostrar 4',
+  eight: 'Mostrar 8',
+};
+
 const sortOptions = [
   { label: 'Nome A-Z', value: 'name-asc' },
   { label: 'Nome Z-A', value: 'name-desc' },
@@ -28,9 +34,12 @@ describe('FilterBar', () => {
         category="all"
         sort="name-asc"
         sortOptions={sortOptions}
+        gridSize={8}
+        gridLabels={gridLabels}
         labels={labels}
         onCategoryChange={onCategoryChange}
         onSortChange={onSortChange}
+        onGridSizeChange={jest.fn()}
       />
     );
 
@@ -54,10 +63,13 @@ describe('FilterBar', () => {
         category="all"
         sort="name-asc"
         sortOptions={sortOptions}
+        gridSize={8}
+        gridLabels={gridLabels}
         labels={labels}
         error="Falha"
         onCategoryChange={jest.fn()}
         onSortChange={jest.fn()}
+        onGridSizeChange={jest.fn()}
       />
     );
 
@@ -73,14 +85,40 @@ describe('FilterBar', () => {
         category="all"
         sort="name-asc"
         sortOptions={sortOptions}
+        gridSize={8}
+        gridLabels={gridLabels}
         labels={labels}
         loading
         onCategoryChange={jest.fn()}
         onSortChange={jest.fn()}
+        onGridSizeChange={jest.fn()}
       />
     );
 
     const categorySelect = screen.getByRole('combobox', { name: labels.category });
     expect(categorySelect).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('permite alternar o tamanho do grid', async () => {
+    const user = userEvent.setup();
+    const onGridSizeChange = jest.fn();
+
+    render(
+      <FilterBar
+        categories={categories}
+        category="all"
+        sort="name-asc"
+        sortOptions={sortOptions}
+        gridSize={8}
+        gridLabels={gridLabels}
+        labels={labels}
+        onCategoryChange={jest.fn()}
+        onSortChange={jest.fn()}
+        onGridSizeChange={onGridSizeChange}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: gridLabels.four }));
+    expect(onGridSizeChange).toHaveBeenCalledWith(4);
   });
 });

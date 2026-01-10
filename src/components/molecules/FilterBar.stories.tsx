@@ -14,6 +14,12 @@ const meta: Meta<typeof FilterBar> = {
       { label: 'Nome: A a Z', value: 'name-asc' },
       { label: 'Nome: Z a A', value: 'name-desc' },
     ],
+    gridSize: 8,
+    gridLabels: {
+      label: 'Tamanho do grid',
+      four: 'Mostrar 4',
+      eight: 'Mostrar 8',
+    },
     labels: {
       category: 'Categoria',
       sort: 'Ordenacao',
@@ -24,6 +30,7 @@ const meta: Meta<typeof FilterBar> = {
   argTypes: {
     onCategoryChange: { action: 'categoria alterada' },
     onSortChange: { action: 'ordenacao alterada' },
+    onGridSizeChange: { action: 'grid alterado' },
   },
 };
 

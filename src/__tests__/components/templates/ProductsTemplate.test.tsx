@@ -10,8 +10,10 @@ import content from '@/config/content.json';
 type FilterBarProps = {
   category: string;
   sort: string;
+  gridSize: number;
   onCategoryChange: (value: string) => void;
   onSortChange: (value: string) => void;
+  onGridSizeChange: (value: number) => void;
 };
 
 type PaginationProps = {
@@ -38,13 +40,23 @@ jest.mock('@/hooks/useMetadata', () => ({
 
 jest.mock('@/components/molecules/FilterBar', () => ({
   __esModule: true,
-  default: ({ category, sort, onCategoryChange, onSortChange }: FilterBarProps) => (
+  default: ({
+    category,
+    sort,
+    gridSize,
+    onCategoryChange,
+    onSortChange,
+    onGridSizeChange,
+  }: FilterBarProps) => (
     <div data-testid="filter-bar" data-category={category} data-sort={sort}>
       <button type="button" onClick={() => onCategoryChange('electronics')}>
         Trocar categoria
       </button>
       <button type="button" onClick={() => onSortChange('name-desc')}>
         Trocar ordenacao
+      </button>
+      <button type="button" onClick={() => onGridSizeChange(4)} data-grid={gridSize}>
+        Trocar grid
       </button>
     </div>
   ),
